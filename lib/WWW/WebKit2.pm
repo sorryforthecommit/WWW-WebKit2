@@ -1,14 +1,14 @@
-package WWW::WebKit;
+package WWW::WebKit2;
 
 =head1 NAME
 
-WWW::WebKit - Perl extension for controlling an embedding WebKit engine
+WWW::WebKit2 - Perl extension for controlling an embedding WebKit2 engine
 
 =head1 SYNOPSIS
 
-    use WWW::WebKit;
+    use WWW::WebKitw;
 
-    my $webkit = WWW::WebKit->new(xvfb => 1);
+    my $webkit = WWW::WebKitw->new(xvfb => 1);
     $webkit->init;
 
     $webkit->open("http://www.google.com");
@@ -19,7 +19,7 @@ WWW::WebKit - Perl extension for controlling an embedding WebKit engine
 
 =head1 DESCRIPTION
 
-WWW::WebKit is a drop-in replacement for WWW::Selenium using Gtk3::WebKit as browser instead of relying on an external Java server and an installed browser.
+WWW::WebKit is a drop-in replacement for WWW::Selenium using Gtk3::WebKit2 as browser instead of relying on an external Java server and an installed browser.
 
 =head2 EXPORT
 
@@ -29,9 +29,10 @@ None by default.
 
 use 5.10.0;
 use Moose;
-
+use lib 'lib';
+use lib '/home/pl/lib/Gtk3-WebKit2/lib';
 use Gtk3;
-use Gtk3::WebKit;
+use Gtk3::WebKit2;
 use Glib qw(TRUE FALSE);
 use Time::HiRes qw(time usleep);
 use X11::Xlib;
@@ -40,12 +41,8 @@ use XSLoader;
 use English '-no_match_vars';
 use POSIX qw<F_SETFD F_GETFD FD_CLOEXEC>;
 
-our $VERSION = '0.11';
-
 use constant DOM_TYPE_ELEMENT => 1;
 use constant ORDERED_NODE_SNAPSHOT_TYPE => 7;
-
-XSLoader::load(__PACKAGE__, $VERSION);
 
 =head2 PROPERTIES
 
@@ -1281,7 +1278,7 @@ See L<Test::WWW::WebKit> for a replacement for L<Test::WWW::Selenium>.
 See L<Test::WWW::WebKit::Catalyst> for a replacement for L<Test::WWW::Selenium::Catalyst>.
 
 The current development version can be found in the git repository at:
-https://github.com/niner/WWW-WebKit
+https://github.com/jscarty/WWW-WebKit2
 
 =head1 AUTHOR
 

@@ -3,17 +3,18 @@ use warnings;
 use utf8;
 
 use Test::More;
-use FindBin qw($Bin);
+use lib 'lib';
+use lib '/home/pl/lib';
+use FindBin qw($Bin $RealBin);
+use lib "$Bin/../../Gtk3-WebKit2/lib";
 use URI;
 
-BEGIN {
-    use_ok 'WWW::WebKit';
-}
+use_ok 'WWW::WebKit2';
 
-my $sel = WWW::WebKit->new(xvfb => 1);
+my $sel = WWW::WebKit2->new(xvfb => 1);
 eval { $sel->init; };
 if ($@ and $@ =~ /\ACould not start Xvfb/) {
-    $sel = WWW::WebKit->new();
+    $sel = WWW::WebKit2->new();
     $sel->init;
 }
 elsif ($@) {
@@ -21,7 +22,7 @@ elsif ($@) {
     fail('init webkit');
 }
 ok(1, 'init done');
-
+=head2
 $sel->open("$Bin/test/load.html");
 ok(1, 'opened');
 
@@ -149,5 +150,7 @@ ok(1, 'disable_plugins worked');
 
 $sel->open("$Bin/test/load.html");
 ok(1, 'loaded test page without plugins');
+
+=cut
 
 done_testing;
