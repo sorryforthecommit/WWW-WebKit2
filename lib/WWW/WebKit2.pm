@@ -55,12 +55,12 @@ has xvfb => (
 
 has view => (
     is        => 'ro',
-    isa       => 'Gtk3::WebKit::WebView',
+    isa       => 'Gtk3::WebKit2::WebView',
     lazy      => 1,
     clearer   => 'clear_view',
     predicate => 'has_view',
     default   => sub {
-        Gtk3::WebKit::WebView->new
+        Gtk3::WebKit2::WebView->new
     },
 );
 
