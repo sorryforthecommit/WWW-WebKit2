@@ -390,7 +390,7 @@ sub set_timeout {
 sub open {
     my ($self, $url) = @_;
 
-    $self->view->open($url);
+    $self->view->load_uri($url);
 
     $self->process_page_load;
 }

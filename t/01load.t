@@ -22,9 +22,10 @@ elsif ($@) {
     fail('init webkit');
 }
 ok(1, 'init done');
-=head2
+
 $sel->open("$Bin/test/load.html");
 ok(1, 'opened');
+=head2
 
 is($sel->get_body_text, 'test');
 
