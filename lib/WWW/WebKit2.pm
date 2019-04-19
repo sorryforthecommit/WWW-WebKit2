@@ -274,10 +274,11 @@ sub init_webkit {
 =cut
     });
 
-    $self->view->signal_connect('console-message' => sub {
-        push @{ $self->console_messages }, $_[1];
-        return FALSE;
-    });
+# console-message does not exist anymore
+#    $self->view->signal_connect('console-message' => sub {
+#        push @{ $self->console_messages }, $_[1];
+#        return FALSE;
+#    });
     $self->view->signal_connect('print' => sub {
         push @{ $self->print_requests }, $_[1];
         return TRUE;
@@ -415,28 +416,6 @@ sub set_timeout {
     my ($self, $timeout) = @_;
 
     $self->default_timeout($timeout);
-}
-
-=head3 refresh()
-
-=cut
-
-sub refresh {
-    my ($self) = @_;
-
-    $self->view->reload;
-    $self->process_page_load;
-}
-
-=head3 go_back()
-
-=cut
-
-sub go_back {
-    my ($self) = @_;
-
-    $self->view->go_back;
-    $self->process_page_load;
 }
 
 sub eval_js {

@@ -27,6 +27,8 @@ ok(1, 'opened');
 
 =head2
 
+pause($time)
+set_timeout
 fire_event($locator)
 wait_for_page_to_load
 wait_for_element_present

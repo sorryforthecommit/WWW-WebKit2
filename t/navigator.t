@@ -24,13 +24,12 @@ elsif ($@) {
 
 $sel->open("$Bin/test/load.html");
 ok(1, 'opened');
+$sel->refresh;
+$sel->open("$Bin/test/type.html");
+$sel->go_back;
 
 =head2
 
-set_timeout($timeout)
-refresh
-go_back
-pause($time)
 submit($locator)
 
 =cut
