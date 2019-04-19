@@ -11,7 +11,7 @@ use URI;
 
 use_ok 'WWW::WebKit2';
 
-my $sel = WWW::WebKit2->new(xvfb => 1);
+my $sel = WWW::WebKit2->new(xvfb => 0);
 eval { $sel->init; };
 if ($@ and $@ =~ /\ACould not start Xvfb/) {
     $sel = WWW::WebKit2->new();
@@ -24,6 +24,9 @@ elsif ($@) {
 
 $sel->open("$Bin/test/load.html");
 ok(1, 'opened');
+
+my $js = $sel->run_javascript('document.title');
+is($js, 'test', 'document.title is test');
 
 =head2
 

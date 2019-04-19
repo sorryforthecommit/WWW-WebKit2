@@ -40,6 +40,7 @@ use lib 'lib';
 use lib '/home/pl/lib/Gtk3-WebKit2/lib';
 use Gtk3;
 use Gtk3::WebKit2;
+use Gtk3::JavaScriptCore;
 use Glib qw(TRUE FALSE);
 use Time::HiRes qw(time usleep);
 use X11::Xlib;
@@ -905,7 +906,8 @@ sub is_visible {
     my $view = $self->view->get_dom_document->get_property('default_view');
     my $style = $view->get_computed_style($element, '');
 
-    # visibility can be calculated by using CSS inheritance. A child of a invisbile parent can still be visible!
+    # visibility can be calculated by using CSS inheritance.
+    # A child of an invisible parent can still be visible!
     my $visible = $style->get_property_value('visibility') eq 'hidden' ? 0 : 1;
 
     do {
