@@ -6,9 +6,9 @@ WWW::WebKit2 - Perl extension for controlling an embedding WebKit2 engine
 
 =head1 SYNOPSIS
 
-    use WWW::WebKitw;
+    use WWW::WebKit2;
 
-    my $webkit = WWW::WebKitw->new(xvfb => 1);
+    my $webkit = WWW::WebKit2->new(xvfb => 1);
     $webkit->init;
 
     $webkit->open("http://www.google.com");
@@ -29,6 +29,13 @@ None by default.
 
 use 5.10.0;
 use Moose;
+
+with 'WWW::WebKit2::MouseInput';
+with 'WWW::WebKit2::KeyboardInput';
+with 'WWW::WebKit2::Events';
+with 'WWW::WebKit2::Navigator';
+with 'WWW::WebKit2::Inspector';
+
 use lib 'lib';
 use lib '/home/pl/lib/Gtk3-WebKit2/lib';
 use Gtk3;
@@ -60,7 +67,11 @@ has view => (
     clearer   => 'clear_view',
     predicate => 'has_view',
     default   => sub {
-        Gtk3::WebKit2::WebView->new
+
+        my $ctx = Gtk3::WebKit2::WebContext::get_default();
+        my $view = Gtk3::WebKit2::WebView->new_with_context($ctx);
+
+        return $view;
     },
 );
 
@@ -209,11 +220,17 @@ has pending_requests => (
     default => sub { {} },
 );
 
+has load_status => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => sub { '' },
+);
+
 =head2 METHODS
 
 =head3 init
 
-Initializes Webkit and GTK3. Must be called before any of the other methods.
+Initializes WebKit2 and GTK3. Must be called before any of the other methods.
 
 =cut
 
@@ -232,34 +249,50 @@ sub init_webkit {
     $self->display;
     Gtk3::init;
 
-    $self->view->signal_connect('script-alert' => sub {
-        push @{ $self->alerts }, $_[2];
+    $self->view->signal_connect('script-dialog' => sub {
+        my ($dialog) = $_[1];
+        warn $dialog;
         return TRUE;
+
+=head2
+        $self->view->signal_connect('script-alert' => sub {
+            push @{ $self->alerts }, $_[2];
+            return TRUE;
+        });
+        $self->view->signal_connect('script-confirm' => sub {
+            push @{ $self->confirmations }, $_[2];
+            WWW::WebKit::XSHelper::set_int_return_value($_[3],
+                @{ $self->confirm_answers }
+                    ? pop @{ $self->confirm_answers }
+                    : ($self->accept_confirm ? TRUE : FALSE));
+            return TRUE;
+        });
+        $self->view->signal_connect('script-prompt' => sub {
+            WWW::WebKit::XSHelper::set_string_return_value($_[4], pop @{ $self->prompt_answers });
+            return TRUE;
+        });
+=cut
     });
-    $self->view->signal_connect('script-confirm' => sub {
-        push @{ $self->confirmations }, $_[2];
-        WWW::WebKit::XSHelper::set_int_return_value($_[3],
-            @{ $self->confirm_answers }
-                ? pop @{ $self->confirm_answers }
-                : ($self->accept_confirm ? TRUE : FALSE));
-        return TRUE;
-    });
-    $self->view->signal_connect('script-prompt' => sub {
-        WWW::WebKit::XSHelper::set_string_return_value($_[4], pop @{ $self->prompt_answers });
-        return TRUE;
-    });
+
     $self->view->signal_connect('console-message' => sub {
         push @{ $self->console_messages }, $_[1];
         return FALSE;
     });
-    $self->view->signal_connect('print-requested' => sub {
+    $self->view->signal_connect('print' => sub {
         push @{ $self->print_requests }, $_[1];
         return TRUE;
     });
 
-    $self->view->signal_connect('resource-request-starting' => sub {
+    $self->view->signal_connect('resource-load-started' => sub {
         return $self->handle_resource_request(@_);
     });
+
+    $self->view->signal_connect('load-changed' => sub {
+        my ($view, $load_event) = @_;
+        $self->load_status($load_event);
+    });
+
+    $self->enable_file_access_from_file_urls;
 
     $self->window->show_all;
     $self->process_events;
@@ -280,20 +313,21 @@ sub process_events {
 
 sub process_page_load {
     my ($self) = @_;
-    Gtk3::main_iteration while Gtk3::events_pending or $self->view->get_load_status ne 'finished';
+    Gtk3::main_iteration while Gtk3::events_pending or $self->load_status ne 'finished';
+    $self->load_status('ready_for_next_url');
 }
 
 sub handle_resource_request {
-    my ($self, $view, $frame, $resource, $request, $response, $data) = @_;
+    my ($self, $view, $resource, $request) = @_;
 
     $self->pending_requests->{"$request"}++;
 
-    $resource->signal_connect('response-received' => sub {
+    $resource->signal_connect('received-data' => sub {
         delete $self->pending_requests->{"$request"};
     });
-    $resource->signal_connect('load-failed' => sub {
+    $resource->signal_connect('failed' => sub {
         # If someone decides not to wait_for_pending_requests, this signal is received
-        # during global destruction with $self beeing undefined.
+        # during global destruction with $self being undefined.
         delete $self->pending_requests->{"$request"} if defined $self;
     });
 }
@@ -381,18 +415,6 @@ sub set_timeout {
     my ($self, $timeout) = @_;
 
     $self->default_timeout($timeout);
-}
-
-=head3 open($url)
-
-=cut
-
-sub open {
-    my ($self, $url) = @_;
-
-    $self->view->load_uri($url);
-
-    $self->process_page_load;
 }
 
 =head3 refresh()
@@ -1248,6 +1270,19 @@ sub disable_plugins {
 
     my $settings = $self->view->get_settings;
     $settings->set_property(enable_plugins => FALSE);
+    $self->view->set_settings($settings);
+}
+
+=head3 enable_file_access_from_file_urls
+
+=cut
+
+sub enable_file_access_from_file_urls {
+    my ($self) = @_;
+
+    my $settings = $self->view->get_settings;
+    $settings->set_allow_file_access_from_file_urls(TRUE);
+    $settings->set_allow_universal_access_from_file_urls(TRUE);
     $self->view->set_settings($settings);
 }
 
