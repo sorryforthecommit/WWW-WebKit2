@@ -252,22 +252,28 @@ sub init_webkit {
 
     $self->view->signal_connect('script-dialog' => sub {
         my ($dialog) = $_[1];
-        warn $dialog;
+        my $message = $dialog->get_message;
+        my $type = $dialog->get_dialog_type;
+        if ($type eq 'confirm') {
+            push @{ $self->confirmations }, $message;
+
+            $dialog->confirm_set_confirmed(
+                @{ $self->confirm_answers }
+                    ? pop @{ $self->confirm_answers }
+                    : ($self->accept_confirm ? TRUE : FALSE)
+            );
+        }
+        if ($type eq 'alert') {
+            push @{ $self->alerts }, $message;
+        }
+
+        if ($type eq 'prompt') {
+            $dialog->set_text(pop @{ $self->prompt_answers });
+        }
+
         return TRUE;
 
 =head2
-        $self->view->signal_connect('script-alert' => sub {
-            push @{ $self->alerts }, $_[2];
-            return TRUE;
-        });
-        $self->view->signal_connect('script-confirm' => sub {
-            push @{ $self->confirmations }, $_[2];
-            WWW::WebKit::XSHelper::set_int_return_value($_[3],
-                @{ $self->confirm_answers }
-                    ? pop @{ $self->confirm_answers }
-                    : ($self->accept_confirm ? TRUE : FALSE));
-            return TRUE;
-        });
         $self->view->signal_connect('script-prompt' => sub {
             WWW::WebKit::XSHelper::set_string_return_value($_[4], pop @{ $self->prompt_answers });
             return TRUE;
@@ -419,96 +425,6 @@ sub set_timeout {
     $self->default_timeout($timeout);
 }
 
-sub eval_js {
-    my ($self, $js) = @_;
-
-    $js =~ s/'/\\'/g;
-    $js =~ s/(?<!\\)\n/\\\n/g;
-    $self->view->execute_script("alert(eval('$js'));");
-    $self->process_page_load;
-    return pop @{ $self->alerts };
-}
-
-sub code_for_locator {
-    my ($self, $locator, $context) = @_;
-
-    $context ||= 'document';
-
-    if ($locator =~ /^xpath=(.*)/) {
-        return "document.evaluate('$1', $context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue";
-    }
-    if ($locator =~ /^label=(.*)/) {
-        return $self->code_for_locator(qq{xpath=.//*[text()="$1"]}, $context);
-    }
-    if ($locator =~ /^id=(.*)/) {
-        return "document.getElementById('$1')";
-    }
-    die "unknown locator $locator";
-}
-
-sub resolve_locator {
-    my ($self, $locator, $document, $context) = @_;
-
-    carp "got no locator" unless $locator;
-
-    $document ||= $self->view->get_dom_document;
-    $context ||= $document;
-
-    if (my ($label) = $locator =~ /^label=(.*)/) {
-        return $self->resolve_locator($label eq '' ? qq{xpath=.//*[not(text())]} : qq{xpath=.//*[text()="$label"]}, $document, $context);
-    }
-    elsif (my ($link) = $locator =~ /^link=(.*)/) {
-        return $self->resolve_locator($link eq '' ? qq{xpath=.//a[not(descendant-or-self::text())]} : qq{xpath=.//a[descendant-or-self::text()="$link"]}, $document, $context);
-    }
-    elsif (my ($value) = $locator =~ /^value=(.*)/) {
-        return $self->resolve_locator(qq{xpath=.//*[\@value="$value"]}, $document, $context);
-    }
-    elsif (my ($index) = $locator =~ /^index=(.*)/) {
-        return $self->resolve_locator(qq{xpath=.//option[position()="$index"]}, $document, $context);
-    }
-    elsif (my ($id) = $locator =~ /^id=(.*)/) {
-        return $document->get_element_by_id($id);
-    }
-    elsif (my ($css) = $locator =~ /^css=(.*)/) {
-        my $elements = $document->query_selector_all($css);
-        my $length = $elements->get_length;
-        croak "$css gave $length results" if $length != 1;
-        return $elements->item(0);
-    }
-    elsif (my ($class) = $locator =~ /^class=(.*)/) {
-        my $elements = $document->query_selector_all(".$class");
-        my $length = $elements->get_length;
-        croak ".$class gave $length results" if $length != 1;
-        return $elements->item(0);
-    }
-    elsif (my ($name) = $locator =~ /^name=(.*)/) {
-        return $self->resolve_locator(qq{xpath=.//*[\@name="$name"]}, $document, $context);
-    }
-    elsif (my ($xpath) = $locator =~ /^(?: xpath=)?(.*)/xm) {
-        my $resolver = $document->create_ns_resolver($context);
-        my $xpath_results = $document->evaluate($xpath, $context, $resolver, ORDERED_NODE_SNAPSHOT_TYPE);
-        my $length = $xpath_results->get_snapshot_length;
-        croak "$xpath gave $length results: " . join(', ', map $xpath_results->snapshot_item($_), 0 .. $length - 1) if $length != 1;
-        return $xpath_results->snapshot_item(0);
-    }
-
-    carp "unknown locator $locator";
-    die "unknown locator $locator";
-}
-
-=head3 get_xpath_count
-
-=cut
-
-sub get_xpath_count {
-    my ($self, $xpath) = @_;
-
-    my $document = $self->view->get_dom_document;
-    my $resolver = $document->create_ns_resolver($document);
-    my $xpath_results = $document->evaluate($xpath, $document, $resolver, ORDERED_NODE_SNAPSHOT_TYPE);
-    return $xpath_results->get_snapshot_length;
-}
-
 =head3 select($select, $option)
 
 =cut
@@ -616,30 +532,6 @@ sub wait_for_element_present {
     return $self->wait_for_condition(sub {
         $self->is_element_present($locator)
     }, $timeout);
-}
-
-=head3 is_element_present($locator)
-
-=cut
-
-sub is_element_present {
-    my ($self, $locator) = @_;
-
-    return eval { $self->resolve_locator($locator) };
-}
-
-=head3 get_text($locator)
-
-=cut
-
-sub get_text {
-    my ($self, $locator) = @_;
-
-    my $element = $self->resolve_locator($locator) or croak "Element not found in get_text($locator)";
-    my $value = $element->get_text_content;
-    $value =~ s/\A \s+ | \s+ \z//gxm;
-    $value =~ s/\s+/ /gxms; # squeeze white space
-    return $value;
 }
 
 =head3 type($locator, $text)
@@ -769,35 +661,6 @@ sub pause {
     }
 }
 
-=head3 is_ordered($first, $second)
-
-=cut
-
-sub is_ordered {
-    my ($self, $first, $second) = @_;
-    return $self->resolve_locator($first)->compare_document_position($self->resolve_locator($second)) == 4;
-}
-
-=head3 get_body_text()
-
-=cut
-
-sub get_body_text {
-    my ($self) = @_;
-
-    return $self->get_text('xpath=//body');
-}
-
-=head3 get_title()
-
-=cut
-
-sub get_title {
-    my ($self) = @_;
-
-    return $self->get_text('xpath=//title');
-}
-
 =head3 mouse_over($locator)
 
 =cut
@@ -833,11 +696,15 @@ sub fire_mouse_event {
     my ($self, $locator, $event_type) = @_;
 
     my $document = $self->view->get_dom_document;
-    my $target = $self->resolve_locator($locator, $document) or return;
+    my $target = $self->resolve_locator($locator) or return;
 
     my $event = $document->create_event('MouseEvent');
-    my ($x, $y) = $self->get_center_screen_position($target);
-    $event->init_mouse_event($event_type, TRUE, TRUE, $document->get_property('default_view'), 1, $x, $y, $x, $y, $self->modifiers->{control} ? TRUE : FALSE, FALSE, FALSE, FALSE, 0, $target);
+    my ($x, $y) = $self->get_center_screen_position($locator);
+    $event->init_mouse_event(
+        $event_type, TRUE, TRUE, $document->get_property('default_view'), 1,
+        $x, $y, $x, $y, $self->modifiers->{control} ? TRUE : FALSE,
+        FALSE, FALSE, FALSE, 0, $target
+    );
     $target->dispatch_event($event);
 
     $self->process_page_load;
@@ -861,63 +728,6 @@ sub fire_event {
     return 1;
 }
 
-=head3 get_value($locator)
-
-=cut
-
-sub get_value {
-    my ($self, $locator) = @_;
-
-    my $element = $self->resolve_locator($locator);
-
-    if (
-        lc $element->get_node_name eq 'input'
-        and $element->get_property('type') =~ /\A(checkbox|radio)\z/
-    ) {
-        return $element->get_checked ? 'on' : 'off';
-    }
-    else {
-        my $value = $element->get_value;
-        $value =~ s/\A \s+ | \s+ \z//gxm;
-        return $value;
-    }
-}
-
-=head3 get_attribute($locator)
-
-=cut
-
-sub get_attribute {
-    my ($self, $locator) = @_;
-    ($locator, my $attr) = $locator =~ m!\A (.*?) /?@ ([^@]*) \z!xm;
-
-    return $self->resolve_locator($locator)->get_attribute($attr);
-}
-
-=head3 is_visible($locator)
-
-=cut
-
-sub is_visible {
-    my ($self, $locator) = @_;
-
-    my $element = $self->resolve_locator($locator) or croak "element not found: $locator";
-
-    my $view = $self->view->get_dom_document->get_property('default_view');
-    my $style = $view->get_computed_style($element, '');
-
-    # visibility can be calculated by using CSS inheritance.
-    # A child of an invisible parent can still be visible!
-    my $visible = $style->get_property_value('visibility') eq 'hidden' ? 0 : 1;
-
-    do {
-        $style = $view->get_computed_style($element, '');
-        $visible &&= $style->get_property_value('display') eq 'none' ? 0 : 1;
-    } while ($visible and $element = $element->get_parent_node and $element->get_node_type == 1);
-
-    return $visible;
-}
-
 =head3 submit($locator)
 
 =cut
@@ -931,54 +741,6 @@ sub submit {
     $self->process_page_load;
 
     return 1;
-}
-
-=head3 get_html_source()
-
-Returns the source code of the current HTML page as it was transferred over the network.
-
-Use $webkit->view->get_dom_document->get_document_element->get_outer_html to get the serialized
-current DOM tree (with all modifications by Javascript)
-
-
-=cut
-
-sub get_html_source {
-    my ($self) = @_;
-
-    my $data = $self->view->get_main_frame->get_data_source->get_data;
-    return $data->{str} if ref $data;
-    return $data;
-}
-
-=head3 get_confirmation()
-
-=cut
-
-sub get_confirmation {
-    my ($self) = @_;
-
-    return pop @{ $self->confirmations };
-}
-
-=head3 get_alert()
-
-=cut
-
-sub get_alert {
-    my ($self) = @_;
-
-    return pop @{ $self->alerts };
-}
-
-=head3 print_requested()
-
-=cut
-
-sub print_requested {
-    my ($self) = @_;
-
-    return pop @{ $self->print_requests } ? 1 : 0;
 }
 
 =head3 answer_on_next_confirm
@@ -1098,8 +860,7 @@ sub native_drag_and_drop_to_position {
     my $step_delay =  $options->{step_delay} // 150; # ms
     $self->event_send_delay($options->{event_send_delay}) if $options->{event_send_delay};
 
-    my $source = $self->resolve_locator($source_locator);
-    my ($source_x, $source_y) = $self->get_center_screen_position($source);
+    my ($source_x, $source_y) = $self->get_center_screen_position($source_locator);
     $self->check_window_bounds($source_x, $source_y, "source '$source_locator'");
 
     my ($delta_x, $delta_y) = ($target_x - $source_x, $target_y - $source_y);
@@ -1135,16 +896,17 @@ Drag source element and drop it into target element.
 sub native_drag_and_drop_to_object {
     my ($self, $source_locator, $target_locator, $options) = @_;
 
-    my $target = $self->resolve_locator($target_locator)
+    my $target = $self->resolve_locator($target_locator)->get_length
         or croak "did not find element $target_locator";
+
+    my $source = $self->resolve_locator($source_locator)->get_length
+        or croak "did not find element $source_locator";
 
     my $steps = $options->{steps} // 5;
     my $step_delay =  $options->{step_delay} // 150; # ms
     $self->event_send_delay($options->{event_send_delay}) if $options->{event_send_delay};
 
-    my $source = $self->resolve_locator($source_locator)
-        or croak "did not find element $source_locator";
-    my ($x, $y) = $self->get_center_screen_position($source);
+    my ($x, $y) = $self->get_center_screen_position($source_locator);
     $self->check_window_bounds($x, $y, "source '$source_locator'");
 
     $self->pause($step_delay);
@@ -1153,7 +915,7 @@ sub native_drag_and_drop_to_object {
     $self->press_mouse_button(1);
     $self->pause($step_delay);
 
-    my ($target_x, $target_y) = $self->get_center_screen_position($target);
+    my ($target_x, $target_y) = $self->get_center_screen_position($target_locator);
     $self->check_window_bounds($target_x, $target_y, "target '$target_locator'");
 
     foreach (0 .. $steps - 1) {
@@ -1180,19 +942,6 @@ sub native_drag_and_drop_to_object {
     $self->process_page_load;
 }
 
-sub check_window_bounds {
-    my ($self, $x, $y, $obj_description) = @_;
-
-    my ($max_x, $max_y) = ($self->window_width, $self->window_height);
-    if ($x > $max_x or $y > $max_y) {
-        croak
-            "$obj_description out of bounds (position: $x, $y - window bounds: $max_x x $max_y). "
-            . "Raise window_width/window_height!"
-    }
-
-    return 1;
-}
-
 sub move_mouse_abs {
     my ($self, $x, $y) = @_;
 
@@ -1212,46 +961,6 @@ sub release_mouse_button {
 
     $self->display->XTestFakeButtonEvent($button, 0, $self->event_send_delay);
     $self->display->XFlush;
-}
-
-sub get_screen_position {
-    my ($self, $element) = @_;
-
-    croak 'did not get an element to get the position from' unless $element;
-
-    my ($x, $y) = $self->scrolled_view->get_window->get_position;
-
-    do {
-        $x += $element->get_offset_left;
-        $y += $element->get_offset_top;
-    } while ($element = $element->get_offset_parent);
-
-    return ($x, $y);
-}
-
-sub get_center_screen_position {
-    my ($self, $element) = @_;
-
-    my ($x, $y) = $self->get_screen_position($element);
-    $x += $element->get_offset_width / 2;
-    $y += $element->get_offset_height / 2;
-
-    return ($x, $y);
-}
-
-=head3 disable_plugins()
-
-Disables WebKit plugins. Use this if you don't need plugins like Java and Flash
-and want to for example silence plugin loading messages.
-
-=cut
-
-sub disable_plugins {
-    my ($self) = @_;
-
-    my $settings = $self->view->get_settings;
-    $settings->set_property(enable_plugins => FALSE);
-    $self->view->set_settings($settings);
 }
 
 =head3 enable_file_access_from_file_urls
