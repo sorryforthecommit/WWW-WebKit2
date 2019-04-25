@@ -23,11 +23,13 @@ elsif ($@) {
     fail('init webkit');
 }
 
+
 $webkit->open("$Bin/test/locator.html");
 ok(1, 'opened');
 
 my $js = $webkit->run_javascript('document.title');
 is($js, 'test', 'document.title is test');
+
 
 my $html_source = $webkit->get_html_source();
 like($html_source, qr/head\>\n.+/, 'HTML source is there');
@@ -103,3 +105,4 @@ $webkit->open("$Bin/test/console_error.html");
 $webkit->run_javascript('console.log("console log stdout test")');
 
 done_testing;
+

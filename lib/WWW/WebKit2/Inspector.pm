@@ -7,6 +7,7 @@ use JSON qw(decode_json encode_json);
 use WWW::WebKit2::Locator;
 use WWW::WebKit2::LocatorCSS;
 
+
 sub run_javascript {
     my ($self, $javascript_string) = @_;
 
@@ -38,6 +39,7 @@ sub get_json_from_javascript_result {
     return $json;
 }
 
+
 =head3 resolve_locator
 
 =cut
@@ -45,6 +47,7 @@ sub get_json_from_javascript_result {
 sub resolve_locator {
     my ($self, $locator) = @_;
 
+        warn 'hello';
     if (my ($css) = $locator =~ /^css=(.*)/) {
         return WWW::WebKit2::LocatorCSS->new({
             locator_string => $locator,
@@ -59,6 +62,7 @@ sub resolve_locator {
 }
 
 =head3 get_title
+
 
 =cut
 
@@ -91,6 +95,7 @@ sub get_html_source {
 
     return $html_source;
 }
+
 
 =head3 get_text
 
@@ -127,6 +132,7 @@ sub get_xpath_count {
 
 sub get_value {
     my ($self, $locator) = @_;
+
 
     my $element = $self->resolve_locator($locator);
 

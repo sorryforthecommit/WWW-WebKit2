@@ -11,19 +11,23 @@ use URI;
 
 use_ok 'WWW::WebKit2';
 
-my $sel = WWW::WebKit2->new(xvfb => 1);
-eval { $sel->init; };
+my $webkit = WWW::WebKit2->new(xvfb => 0);
+eval { $webkit->init; };
 if ($@ and $@ =~ /\ACould not start Xvfb/) {
-    $sel = WWW::WebKit2->new();
-    $sel->init;
+    $webkit = WWW::WebKit2->new();
+    $webkit->init;
 }
 elsif ($@) {
     diag($@);
     fail('init webkit');
 }
 
-$sel->open("$Bin/test/load.html");
+$webkit->open("$Bin/test/mouse_input.html");
+
 ok(1, 'opened');
+warn 'here';
+$webkit->select('.//select[@name="dropdown_list"]', './/option[@value="testtwo"]');
+
 
 =head2
 
