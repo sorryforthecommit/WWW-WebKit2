@@ -39,15 +39,23 @@ sub get_json_from_javascript_result {
     return $json;
 }
 
+sub xpath_search {
+    my ($self, $locator) = @_;
+
+    my $search = "document.evaluate('$locator', document, null, XPathResult.ANY_TYPE, null)";
+    my $path = $self->run_javascript($search);
+
+    return $path;
+}
 
 =head3 resolve_locator
+
 
 =cut
 
 sub resolve_locator {
     my ($self, $locator) = @_;
 
-        warn 'hello';
     if (my ($css) = $locator =~ /^css=(.*)/) {
         return WWW::WebKit2::LocatorCSS->new({
             locator_string => $locator,

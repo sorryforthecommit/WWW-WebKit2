@@ -105,4 +105,3 @@ $webkit->open("$Bin/test/console_error.html");
 $webkit->run_javascript('console.log("console log stdout test")');
 
 done_testing;
-
