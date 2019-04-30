@@ -39,10 +39,11 @@ sub get_json_from_javascript_result {
     return $json;
 }
 
-sub xpath_search {
+sub xpath_text_search {
     my ($self, $locator) = @_;
 
-    my $search = "document.evaluate('$locator', document, null, XPathResult.ANY_TYPE, null)";
+    my $search = "document.evaluate('$locator', document, null, XPathResult.STRING_TYPE, null ).stringValue;";
+
     my $path = $self->run_javascript($search);
 
     return $path;
