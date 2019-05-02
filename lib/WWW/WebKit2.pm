@@ -418,6 +418,12 @@ Please see L<WWW::Selenium> for the full documentation of these methods.
 
 =cut
 
+sub set_timeout {
+    my ($self, $timeout) = @_;
+
+    $self->default_timeout($timeout);
+}
+
 sub code_for_locator {
     my ($self, $locator, $context) = @_;
 

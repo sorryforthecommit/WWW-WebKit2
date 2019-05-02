@@ -7,7 +7,6 @@ use JSON qw(decode_json encode_json);
 use WWW::WebKit2::Locator;
 use WWW::WebKit2::LocatorCSS;
 
-
 sub run_javascript {
     my ($self, $javascript_string) = @_;
 
@@ -128,7 +127,6 @@ sub get_html_source {
 
     return $html_source;
 }
-
 
 =head3 get_text
 
@@ -309,6 +307,15 @@ sub get_alert {
     my ($self) = @_;
 
     return pop @{ $self->alerts };
+}
+
+=head3 eval_js
+
+=cut
+
+sub eval_js {
+    my ($self, $javascript_string) = @_;
+    return decode_json $self->run_javascript($javascript_string);
 }
 
 1;
