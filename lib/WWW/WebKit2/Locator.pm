@@ -1,10 +1,7 @@
 package WWW::WebKit2::Locator;
 
 use common::sense;
-<<<<<<< HEAD
 use JSON qw(decode_json encode_json);
-=======
->>>>>>> Add WWW::WebKit2::Locator to resolve locator strings to xpath on demand.
 use Moose;
 
 has 'locator_string' => (
@@ -19,7 +16,6 @@ has 'inspector' => (
     required => 1,
 );
 
-<<<<<<< HEAD
 has 'resolved_locator' => (
     is       => 'ro',
     isa      => 'Str',
@@ -40,8 +36,6 @@ sub get_text {
     return $self->property_search('textContent');
 }
 
-=======
->>>>>>> Add WWW::WebKit2::Locator to resolve locator strings to xpath on demand.
 =head2 get_inner_html
 
 =cut
@@ -49,7 +43,6 @@ sub get_text {
 sub get_inner_html {
     my ($self) = @_;
 
-<<<<<<< HEAD
     return $self->property_search('innerHTML');
 }
 

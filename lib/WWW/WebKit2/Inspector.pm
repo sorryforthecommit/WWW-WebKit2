@@ -3,7 +3,6 @@ package WWW::WebKit2::Inspector;
 use Carp qw(carp croak);
 use Glib qw(TRUE FALSE);
 use Moose::Role;
-<<<<<<< HEAD
 use JSON qw(decode_json encode_json);
 use WWW::WebKit2::Locator;
 use WWW::WebKit2::LocatorCSS;
@@ -40,10 +39,36 @@ sub get_json_from_javascript_result {
     return $json;
 }
 
+my $get_elements_function = q{
+    function getElementsByXPath(xpath, parent) {
+        let results = [];
+        let query = document.evaluate(xpath, parent || document,
+            null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+        for (let i = 0, length = query.snapshotLength; i < length; ++i) {
+            results.push(query.snapshotItem(i));
+        }
+        return results;
+    };
+};
+
+sub xpath_html_search {
+    my ($self, $locator) = @_;
+
+    my $search = "
+        $get_elements_function
+        var element = getElementsByXPath('$locator');
+        element[0].innerHTML;
+    ";
+
+    return $self->run_javascript($search);
+}
+
 sub xpath_text_search {
     my ($self, $locator) = @_;
 
-    my $search = "document.evaluate('$locator', document, null, XPathResult.STRING_TYPE, null ).stringValue;";
+    my $search =
+        "document.evaluate('$locator', document, null, XPathResult.STRING_TYPE, null )" .
+        ".stringValue;";
 
     my $path = $self->run_javascript($search);
 
@@ -71,7 +96,6 @@ sub resolve_locator {
 }
 
 =head3 get_title
-
 
 =cut
 
@@ -112,6 +136,7 @@ sub get_html_source {
 
 sub get_text {
     my ($self, $locator) = @_;
+
 
     return $self->resolve_locator($locator)->get_text;
 }
