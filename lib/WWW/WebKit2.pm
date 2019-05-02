@@ -435,56 +435,6 @@ sub code_for_locator {
     die "unknown locator $locator";
 }
 
-# sub resolve_locator {
-#     my ($self, $locator, $document, $context) = @_;
-#
-#     carp "got no locator" unless $locator;
-#
-#     $document ||= $self->view->get_dom_document;
-#     $context ||= $document;
-#
-#     if (my ($label) = $locator =~ /^label=(.*)/) {
-#         return $self->resolve_locator($label eq '' ? qq{xpath=.//*[not(text())]} : qq{xpath=.//*[text()="$label"]}, $document, $context);
-#     }
-#     elsif (my ($link) = $locator =~ /^link=(.*)/) {
-#         return $self->resolve_locator($link eq '' ? qq{xpath=.//a[not(descendant-or-self::text())]} : qq{xpath=.//a[descendant-or-self::text()="$link"]}, $document, $context);
-#     }
-#     elsif (my ($value) = $locator =~ /^value=(.*)/) {
-#         return $self->resolve_locator(qq{xpath=.//*[\@value="$value"]}, $document, $context);
-#     }
-#     elsif (my ($index) = $locator =~ /^index=(.*)/) {
-#         return $self->resolve_locator(qq{xpath=.//option[position()="$index"]}, $document, $context);
-#     }
-#     elsif (my ($id) = $locator =~ /^id=(.*)/) {
-#         return $document->get_element_by_id($id);
-#     }
-#     elsif (my ($css) = $locator =~ /^css=(.*)/) {
-#         my $elements = $document->query_selector_all($css);
-#         my $length = $elements->get_length;
-#         croak "$css gave $length results" if $length != 1;
-#         return $elements->item(0);
-#     }
-#     elsif (my ($class) = $locator =~ /^class=(.*)/) {
-#         my $elements = $document->query_selector_all(".$class");
-#         my $length = $elements->get_length;
-#         croak ".$class gave $length results" if $length != 1;
-#         return $elements->item(0);
-#     }
-#     elsif (my ($name) = $locator =~ /^name=(.*)/) {
-#         return $self->resolve_locator(qq{xpath=.//*[\@name="$name"]}, $document, $context);
-#     }
-#     elsif (my ($xpath) = $locator =~ /^(?: xpath=)?(.*)/xm) {
-#         my $resolver = $document->create_ns_resolver($context);
-#         my $xpath_results = $document->evaluate($xpath, $context, $resolver, ORDERED_NODE_SNAPSHOT_TYPE);
-#         my $length = $xpath_results->get_snapshot_length;
-#         croak "$xpath gave $length results: " . join(', ', map $xpath_results->snapshot_item($_), 0 .. $length - 1) if $length != 1;
-#         return $xpath_results->snapshot_item(0);
-#     }
-#
-#     carp "unknown locator $locator";
-#     die "unknown locator $locator";
-# }
-
 =head3 get_xpath_count
 
 =cut

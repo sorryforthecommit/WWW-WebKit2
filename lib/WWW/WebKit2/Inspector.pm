@@ -3,6 +3,7 @@ package WWW::WebKit2::Inspector;
 use Carp qw(carp croak);
 use Glib qw(TRUE FALSE);
 use Moose::Role;
+<<<<<<< HEAD
 use JSON qw(decode_json encode_json);
 use WWW::WebKit2::Locator;
 use WWW::WebKit2::LocatorCSS;
@@ -50,7 +51,6 @@ sub xpath_text_search {
 }
 
 =head3 resolve_locator
-
 
 =cut
 
