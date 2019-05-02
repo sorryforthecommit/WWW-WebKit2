@@ -160,7 +160,19 @@ sub get_length {
     return decode_json $self->inspector->run_javascript($search);
 }
 
-=head2 get_screen_position
+=head2 get_tag_name
+
+=cut
+
+sub get_tag_name {
+    my ($self) = @_;
+
+    my $xpath = $self->resolve_locator_to_xpath;
+
+    return $self->inspector->xpath_property_search($xpath, 'tagName');
+}
+
+=head2 resolve_locator_to_xpath
 
 =cut
 

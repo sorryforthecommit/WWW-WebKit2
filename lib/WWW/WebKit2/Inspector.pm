@@ -53,10 +53,16 @@ my $get_elements_function = q{
 sub xpath_html_search {
     my ($self, $locator) = @_;
 
+    return $self->xpath_property_search($locator, 'innerHTML');
+}
+
+sub xpath_property_search {
+    my ($self, $locator, $property) = @_;
+
     my $search = "
         $get_elements_function
         var element = getElementsByXPath('$locator');
-        element[0].innerHTML;
+        element[0].$property;
     ";
 
     return $self->run_javascript($search);

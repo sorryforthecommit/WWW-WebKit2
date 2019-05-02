@@ -424,23 +424,6 @@ sub set_timeout {
     $self->default_timeout($timeout);
 }
 
-sub code_for_locator {
-    my ($self, $locator, $context) = @_;
-
-    $context ||= 'document';
-
-    if ($locator =~ /^xpath=(.*)/) {
-        return "document.evaluate('$1', $context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue";
-    }
-    if ($locator =~ /^label=(.*)/) {
-        return $self->code_for_locator(qq{xpath=.//*[text()="$1"]}, $context);
-    }
-    if ($locator =~ /^id=(.*)/) {
-        return "document.getElementById('$1')";
-    }
-    die "unknown locator $locator";
-}
-
 =head3 get_xpath_count
 
 =cut
