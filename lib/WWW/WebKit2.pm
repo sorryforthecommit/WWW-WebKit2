@@ -696,17 +696,6 @@ sub fire_mouse_event {
     return 1;
 }
 
-=head3 get_attribute($locator)
-
-=cut
-
-sub get_attribute {
-    my ($self, $locator) = @_;
-    ($locator, my $attr) = $locator =~ m!\A (.*?) /?@ ([^@]*) \z!xm;
-
-    return $self->resolve_locator($locator)->get_attribute($attr);
-}
-
 =head3 submit($locator)
 
 =cut
