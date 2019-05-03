@@ -169,7 +169,7 @@ sub get_tag_name {
 
     my $xpath = $self->resolve_locator_to_xpath;
 
-    return $self->inspector->xpath_property_search($xpath, 'tagName');
+    return $self->property_search($xpath, 'tagName');
 }
 
 =head2 resolve_locator_to_xpath

@@ -38,48 +38,6 @@ sub get_json_from_javascript_result {
     return $json;
 }
 
-my $get_elements_function = q{
-    function getElementsByXPath(xpath, parent) {
-        let results = [];
-        let query = document.evaluate(xpath, parent || document,
-            null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-        for (let i = 0, length = query.snapshotLength; i < length; ++i) {
-            results.push(query.snapshotItem(i));
-        }
-        return results;
-    };
-};
-
-sub xpath_html_search {
-    my ($self, $locator) = @_;
-
-    return $self->xpath_property_search($locator, 'innerHTML');
-}
-
-sub xpath_property_search {
-    my ($self, $locator, $property) = @_;
-
-    my $search = "
-        $get_elements_function
-        var element = getElementsByXPath('$locator');
-        element[0].$property;
-    ";
-
-    return $self->run_javascript($search);
-}
-
-sub xpath_text_search {
-    my ($self, $locator) = @_;
-
-    my $search =
-        "document.evaluate('$locator', document, null, XPathResult.STRING_TYPE, null )" .
-        ".stringValue;";
-
-    my $path = $self->run_javascript($search);
-
-    return $path;
-}
-
 =head3 resolve_locator
 
 =cut
@@ -140,7 +98,6 @@ sub get_html_source {
 
 sub get_text {
     my ($self, $locator) = @_;
-
 
     return $self->resolve_locator($locator)->get_text;
 }
