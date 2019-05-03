@@ -930,16 +930,6 @@ sub release_mouse_button {
     $self->display->XFlush;
 }
 
-sub get_center_screen_position {
-    my ($self, $element) = @_;
-
-    my ($x, $y) = $self->get_screen_position($element);
-    $x += $element->get_offset_width / 2;
-    $y += $element->get_offset_height / 2;
-
-    return ($x, $y);
-}
-
 =head3 disable_plugins()
 
 Disables WebKit plugins. Use this if you don't need plugins like Java and Flash
