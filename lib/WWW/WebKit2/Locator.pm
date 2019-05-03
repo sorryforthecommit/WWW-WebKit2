@@ -177,7 +177,7 @@ sub get_tag_name {
 sub get_attribute {
     my ($self, $attribute) = @_;
 
-    return $self->attribute_search($attribute);
+    return $self->property_search("getAttribute('$attribute')");
 }
 
 =head2 resolve_locator
