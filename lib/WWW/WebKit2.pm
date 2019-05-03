@@ -742,24 +742,6 @@ sub submit {
     return 1;
 }
 
-=head3 get_html_source()
-
-Returns the source code of the current HTML page as it was transferred over the network.
-
-Use $webkit->view->get_dom_document->get_document_element->get_outer_html to get the serialized
-current DOM tree (with all modifications by Javascript)
-
-
-=cut
-#
-# sub get_html_source {
-#     my ($self) = @_;
-#
-#     my $data = $self->view->get_main_frame->get_data_source->get_data;
-#     return $data->{str} if ref $data;
-#     return $data;
-# }
-
 =head3 answer_on_next_confirm
 
 =cut
