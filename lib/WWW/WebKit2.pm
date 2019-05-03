@@ -760,36 +760,6 @@ current DOM tree (with all modifications by Javascript)
 #     return $data;
 # }
 
-=head3 get_confirmation()
-
-=cut
-
-sub get_confirmation {
-    my ($self) = @_;
-
-    return pop @{ $self->confirmations };
-}
-
-=head3 get_alert()
-
-=cut
-
-sub get_alert {
-    my ($self) = @_;
-
-    return pop @{ $self->alerts };
-}
-
-=head3 print_requested()
-
-=cut
-
-sub print_requested {
-    my ($self) = @_;
-
-    return pop @{ $self->print_requests } ? 1 : 0;
-}
-
 =head3 answer_on_next_confirm
 
 =cut
