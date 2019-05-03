@@ -930,21 +930,6 @@ sub release_mouse_button {
     $self->display->XFlush;
 }
 
-=head3 disable_plugins()
-
-Disables WebKit plugins. Use this if you don't need plugins like Java and Flash
-and want to for example silence plugin loading messages.
-
-=cut
-
-sub disable_plugins {
-    my ($self) = @_;
-
-    my $settings = $self->view->get_settings;
-    $settings->set_property(enable_plugins => FALSE);
-    $self->view->set_settings($settings);
-}
-
 =head3 enable_file_access_from_file_urls
 
 =cut
