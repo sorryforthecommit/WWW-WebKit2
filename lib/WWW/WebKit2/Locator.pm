@@ -33,11 +33,7 @@ has 'resolved_locator' => (
 sub get_text {
     my ($self) = @_;
 
-<<<<<<< HEAD
     return $self->property_search('textContent');
-=======
-    return $self->text_search;
->>>>>>> add LocatorCSS because it needs different handling than XPath
 }
 
 =head2 get_inner_html
@@ -48,7 +44,6 @@ sub get_inner_html {
     my ($self) = @_;
 
     return $self->property_search('innerHTML');
-<<<<<<< HEAD
 }
 
 =head2 get_tag_name
@@ -163,8 +158,6 @@ sub get_length {
     my $search = $self->prepare_elements_search('length');
 
     return decode_json $self->inspector->run_javascript($search);
-=======
->>>>>>> add LocatorCSS because it needs different handling than XPath
 }
 
 =head2 get_tag_name
@@ -177,11 +170,20 @@ sub get_tag_name {
     return $self->property_search('tagName');
 }
 
+=head2 get_attribute
+
+=cut
+
+sub get_attribute {
+    my ($self, $attribute) = @_;
+
+    return $self->attribute_search($attribute);
+}
+
 =head2 resolve_locator
 
 =cut
 
-<<<<<<< HEAD
 sub get_screen_position {
     my ($self) = @_;
 
@@ -261,8 +263,6 @@ sub is_visible {
 
 =cut
 
-=======
->>>>>>> add LocatorCSS because it needs different handling than XPath
 sub resolve_locator {
     my ($self) = @_;
 
@@ -309,21 +309,12 @@ my $get_elements_function = q{
     };
 };
 
-<<<<<<< HEAD
 =head2 prepare_element
 
 =cut
 
 sub prepare_element {
     my ($self) = @_;
-=======
-=head2 property_search
-
-=cut
-
-sub property_search {
-    my ($self, $property) = @_;
->>>>>>> add LocatorCSS because it needs different handling than XPath
 
     my $locator = $self->resolved_locator;
 
