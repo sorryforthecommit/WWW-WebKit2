@@ -160,39 +160,7 @@ sub get_length {
     return decode_json $self->inspector->run_javascript($search);
 }
 
-=head2 get_tag_name
-
-=cut
-
-sub get_tag_name {
-    my ($self) = @_;
-
-    return $self->property_search('tagName');
-}
-
-=head2 get_attribute
-
-=cut
-
-sub get_attribute {
-    my ($self, $attribute) = @_;
-
-    return $self->property_search("getAttribute('$attribute')");
-}
-
-=head2 get_length
-
-=cut
-
-sub get_length {
-    my ($self, $attribute) = @_;
-
-    my $search = $self->prepare_elements_search('length');
-
-    return decode_json $self->inspector->run_javascript($search);
-}
-
-=head2 resolve_locator
+=head2 get_screen_position
 
 =cut
 

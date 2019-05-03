@@ -930,6 +930,63 @@ sub release_mouse_button {
     $self->display->XFlush;
 }
 
+sub get_center_screen_position {
+    my ($self, $element) = @_;
+
+    my ($x, $y) = $self->get_screen_position($element);
+    $x += $element->get_offset_width / 2;
+    $y += $element->get_offset_height / 2;
+
+    return ($x, $y);
+}
+
+=head3 disable_plugins()
+
+Disables WebKit plugins. Use this if you don't need plugins like Java and Flash
+and want to for example silence plugin loading messages.
+
+=cut
+
+sub disable_plugins {
+    my ($self) = @_;
+
+    my $settings = $self->view->get_settings;
+    $settings->set_property(enable_plugins => FALSE);
+    $self->view->set_settings($settings);
+}
+
+=head3 enable_file_access_from_file_urls
+
+=cut
+
+sub enable_file_access_from_file_urls {
+    my ($self) = @_;
+
+    my $settings = $self->view->get_settings;
+    $settings->set_allow_file_access_from_file_urls(TRUE);
+    $settings->set_allow_universal_access_from_file_urls(TRUE);
+    $self->view->set_settings($settings);
+}
+
+=head3 delete_text($locator)
+
+Delete text in elements where contenteditable="true".
+
+=cut
+
+sub delete_text {
+    my ($self, $locator) = @_;
+
+    my $element = $self->resolve_locator($locator) or return;
+
+    while ($self->get_text($locator)) {
+        $self->key_press($locator, '\127', $element); # Delete
+    };
+
+    return 1;
+}
+
+
 1;
 
 =head1 SEE ALSO
