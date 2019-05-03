@@ -509,6 +509,30 @@ sub change_check {
     return 1;
 }
 
+=head3 wait_for_page_to_load($timeout)
+
+=cut
+
+sub wait_for_page_to_load {
+    my ($self, $timeout) = @_;
+
+    return $self->wait_for_condition(sub {
+        $self->view->get_load_status eq 'finished';
+    }, $timeout);
+}
+
+=head3 wait_for_element_present($locator, $timeout)
+
+=cut
+
+sub wait_for_element_present {
+    my ($self, $locator, $timeout) = @_;
+
+    return $self->wait_for_condition(sub {
+        $self->is_element_present($locator)
+    }, $timeout);
+}
+
 =head3 type($locator, $text)
 
 =cut
