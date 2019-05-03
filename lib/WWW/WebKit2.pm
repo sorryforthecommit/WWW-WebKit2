@@ -660,16 +660,6 @@ sub pause {
     }
 }
 
-=head3 is_ordered($first, $second)
-
-=cut
-
-sub is_ordered {
-    my ($self, $first, $second) = @_;
-    return $self->resolve_locator($first)->compare_document_position($self->resolve_locator($second)) == 4;
-}
-
-
 =head3 mouse_over($locator)
 
 =cut
