@@ -48,6 +48,20 @@ sub prepare_elements {
     return $search;
 }
 
+=head2 prepare_elements_search
+
+=cut
+
+sub prepare_elements_search {
+    my ($self, $function) = @_;
+
+    my $locator = $self->resolved_locator;
+
+    my $search = "document.querySelectorAll('$locator').$function;";
+
+    return $search;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

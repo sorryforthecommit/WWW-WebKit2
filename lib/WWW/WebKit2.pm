@@ -424,17 +424,34 @@ sub set_timeout {
     $self->default_timeout($timeout);
 }
 
-=head3 get_xpath_count
+=head3 select($select, $option)
 
 =cut
 
-sub get_xpath_count {
-    my ($self, $xpath) = @_;
+sub select {
+    my ($self, $select, $option) = @_;
 
     my $document = $self->view->get_dom_document;
-    my $resolver = $document->create_ns_resolver($document);
-    my $xpath_results = $document->evaluate($xpath, $document, $resolver, ORDERED_NODE_SNAPSHOT_TYPE);
-    return $xpath_results->get_snapshot_length;
+    $select = $self->resolve_locator($select, $document)          or return;
+    $option = $self->resolve_locator($option, $document, $select) or return;
+
+    my $options = $select->get_property('options');
+    foreach my $i (0 .. $options->get_length) {
+        my $current = $options->item($i);
+
+        if ($current->is_same_node($option)) {
+            $select->set_selected_index($i);
+
+            my $changed = $document->create_event('Event');
+            $changed->init_event('change', TRUE, TRUE);
+            $select->dispatch_event($changed);
+
+            $self->process_page_load;
+            return 1;
+        }
+    }
+
+    return;
 }
 
 =head3 click($locator)

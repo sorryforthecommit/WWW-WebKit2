@@ -7,6 +7,24 @@ use JSON qw(decode_json encode_json);
 use WWW::WebKit2::Locator;
 use WWW::WebKit2::LocatorCSS;
 
+<<<<<<< HEAD
+=======
+=head2
+get_value($locator)
+get_attribute($locator)
+get_confirmation
+get_alert
+is_visible($locator)
+check_window_bounds
+get_screen_position($element)
+get_center_screen_position($element)
+is_element_present($locator)
+is_ordered($first, $second)
+disable_plugins
+print_requested
+=cut
+
+>>>>>>> implement get_xpath_count and get_length
 sub run_javascript {
     my ($self, $javascript_string) = @_;
 

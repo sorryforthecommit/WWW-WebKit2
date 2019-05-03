@@ -180,6 +180,18 @@ sub get_attribute {
     return $self->property_search("getAttribute('$attribute')");
 }
 
+=head2 get_length
+
+=cut
+
+sub get_length {
+    my ($self, $attribute) = @_;
+
+    my $search = $self->prepare_elements_search('length');
+
+    return decode_json $self->inspector->run_javascript($search);
+}
+
 =head2 resolve_locator
 
 =cut
@@ -364,8 +376,18 @@ sub prepare_elements {
 sub prepare_elements_search {
     my ($self, $function) = @_;
 
+<<<<<<< HEAD
     my $search = $self->prepare_elements;
     $search .= "elements.$function;";
+=======
+    my $locator = $self->resolved_locator;
+
+    my $search = "
+        $get_elements_function
+        var elements = getElementsByXPath('$locator');
+        elements.$function;
+    ";
+>>>>>>> implement get_xpath_count and get_length
 
     return $search;
 }
