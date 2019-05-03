@@ -509,7 +509,6 @@ sub change_check {
     return 1;
 }
 
-
 =head3 type($locator, $text)
 
 =cut
@@ -695,28 +694,6 @@ sub fire_mouse_event {
 
     $self->process_page_load;
     return 1;
-}
-
-=head3 get_value($locator)
-
-=cut
-
-sub get_value {
-    my ($self, $locator) = @_;
-
-    my $element = $self->resolve_locator($locator);
-
-    if (
-        lc $element->get_node_name eq 'input'
-        and $element->get_property('type') =~ /\A(checkbox|radio)\z/
-    ) {
-        return $element->get_checked ? 'on' : 'off';
-    }
-    else {
-        my $value = $element->get_value;
-        $value =~ s/\A \s+ | \s+ \z//gxm;
-        return $value;
-    }
 }
 
 =head3 get_attribute($locator)

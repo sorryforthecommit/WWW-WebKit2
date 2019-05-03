@@ -23,7 +23,6 @@ elsif ($@) {
     fail('init webkit');
 }
 
-
 $webkit->open("$Bin/test/locator.html");
 ok(1, 'opened');
 

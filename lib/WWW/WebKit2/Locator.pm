@@ -376,18 +376,8 @@ sub prepare_elements {
 sub prepare_elements_search {
     my ($self, $function) = @_;
 
-<<<<<<< HEAD
     my $search = $self->prepare_elements;
     $search .= "elements.$function;";
-=======
-    my $locator = $self->resolved_locator;
-
-    my $search = "
-        $get_elements_function
-        var elements = getElementsByXPath('$locator');
-        elements.$function;
-    ";
->>>>>>> implement get_xpath_count and get_length
 
     return $search;
 }
