@@ -720,6 +720,23 @@ sub fire_mouse_event {
     return 1;
 }
 
+=head3 fire_event($locator, $event_type)
+
+=cut
+
+sub fire_event {
+    my ($self, $locator, $event_type) = @_;
+
+    my $document = $self->view->get_dom_document;
+    my $target = $self->resolve_locator($locator, $document) or return;
+
+    my $event = $document->create_event('HTMLEvents');
+    $event->init_event($event_type, TRUE, TRUE);
+    $target->dispatch_event($event);
+
+    return 1;
+}
+
 =head3 submit($locator)
 
 =cut
