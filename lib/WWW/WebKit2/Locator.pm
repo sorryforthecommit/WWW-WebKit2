@@ -156,6 +156,16 @@ sub get_screen_position {
     return ($result->{x}, $result->{y});
 }
 
+=head2 submit
+
+=cut
+
+sub submit {
+    my ($self) = @_;
+
+    return decode_json $self->property_search('submit()');
+}
+
 =head2 is_visible
 
 Taken from jQuery's codebase.

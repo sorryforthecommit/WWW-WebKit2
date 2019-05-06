@@ -28,10 +28,8 @@ $sel->refresh;
 $sel->open("$Bin/test/type.html");
 $sel->go_back;
 
-=head2
-
-submit($locator)
-
-=cut
+# submitting leads to a "URL can't be shown" error, but technically it works.
+$sel->open("$Bin/test/type.html");
+$sel->submit('css=form');
 
 done_testing;

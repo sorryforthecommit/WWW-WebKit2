@@ -728,21 +728,6 @@ sub fire_event {
     return 1;
 }
 
-=head3 submit($locator)
-
-=cut
-
-sub submit {
-    my ($self, $locator) = @_;
-
-    my $form = $self->resolve_locator($locator) or return;
-    $form->submit;
-
-    $self->process_page_load;
-
-    return 1;
-}
-
 =head3 answer_on_next_confirm
 
 =cut
