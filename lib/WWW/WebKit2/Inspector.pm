@@ -271,13 +271,4 @@ sub get_alert {
     return pop @{ $self->alerts };
 }
 
-=head3 eval_js
-
-=cut
-
-sub eval_js {
-    my ($self, $javascript_string) = @_;
-    return decode_json $self->run_javascript($javascript_string);
-}
-
 1;
