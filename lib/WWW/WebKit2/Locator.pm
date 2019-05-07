@@ -166,6 +166,21 @@ sub submit {
     return decode_json $self->property_search('submit()');
 }
 
+=head2 fire_event
+
+=cut
+
+sub fire_event {
+    my ($self, $event_type) = @_;
+
+    my $fire_event = $self->prepare_element . '
+        var event = new Event("' . $event_type . '");
+        element.dispatchEvent(event);
+    ';
+
+    return $self->inspector->run_javascript($fire_event)
+}
+
 =head2 is_visible
 
 Taken from jQuery's codebase.

@@ -11,32 +11,55 @@ use URI;
 
 use_ok 'WWW::WebKit2';
 
-my $sel = WWW::WebKit2->new(xvfb => 1);
-eval { $sel->init; };
+my $webkit = WWW::WebKit2->new(xvfb => 1);
+eval { $webkit->init; };
 if ($@ and $@ =~ /\ACould not start Xvfb/) {
-    $sel = WWW::WebKit2->new();
-    $sel->init;
+    $webkit = WWW::WebKit2->new();
+    $webkit->init;
 }
 elsif ($@) {
     diag($@);
     fail('init webkit');
 }
 
-$sel->open("$Bin/test/load.html");
+$webkit->open("$Bin/test/events.html");
 ok(1, 'opened');
 
-=head2
+$webkit->wait_for_page_to_load(100);
 
-pause($time)
-set_timeout
-fire_event($locator)
-wait_for_page_to_load
-wait_for_element_present
-wait_for_pending_requests($timeout)
-wait_for_element_to_disappear($locator, $timeout)
-wait_for_alert($text, $timeout)
-wait_for_condition($condition, $timeout)
+ok(
+    $webkit->wait_for_pending_requests(100)
+);
 
-=cut
+$webkit->pause(100);
+$webkit->set_timeout(10000);
+
+ok(
+    $webkit->wait_for_condition(sub {
+        $webkit->is_visible('css=h1');
+    }, 100)
+);
+
+$webkit->eval_js("window.scrollBy(0, 100);");
+ok(
+    $webkit->wait_for_condition(sub{
+        $webkit->eval_js("document.documentElement.scrollTop") == 100
+    }, 1000)
+);
+
+ok(
+    $webkit->wait_for_element_present('//div[@id="foobarbaz"]', 1000)
+);
+
+ok(
+    $webkit->wait_for_element_to_disappear('//div[@id="foobarbaz"]', 1000)
+);
+
+$webkit->wait_for_alert("hello there", 100);
+
+$webkit->fire_event('css=input', 'focus');
+$webkit->wait_for_alert("focused", 100);
+$webkit->fire_event('//input', 'blur');
+$webkit->wait_for_alert("blurred", 100);
 
 done_testing;

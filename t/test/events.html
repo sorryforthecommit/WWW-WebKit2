@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>events</title>
+        <style>
+        #big_content { border: 1px solid green; height: 2000px; }
+        html, body { height: 100%; }
+        </style>
+        <script>
+            window.onload = function() {
+                var div = document.createElement('div');
+                div.id = 'foobarbaz';
+
+                window.setTimeout(function() {
+                    document.body.appendChild(div);
+                }, 500);
+
+                window.setTimeout(function() {
+                    document.body.removeChild(div);
+                }, 1000);
+
+                window.setTimeout(function() {
+                    alert('hello there');
+                }, 1500);
+
+                var input = document.querySelector('input[name="focus"]');
+                input.addEventListener('focus', function(e) {
+                    alert('focused');
+                });
+                input.addEventListener('blur', function(e) {
+                    alert('blurred');
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Events Header</h1>
+
+        <div id="big_content">
+            <form>
+                <input name="focus" value="1" />
+            </form>
+        </div>
+    </body>
+</html>

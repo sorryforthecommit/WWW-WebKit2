@@ -415,18 +415,6 @@ sub DESTROY {
 
 Please see L<WWW::Selenium> for the full documentation of these methods.
 
-=head3 set_timeout($timeout)
-
-Set the default timeout to $timeout.
-
-=cut
-
-sub set_timeout {
-    my ($self, $timeout) = @_;
-
-    $self->default_timeout($timeout);
-}
-
 =head3 select($select, $option)
 
 =cut
@@ -510,30 +498,6 @@ sub change_check {
 
     $self->process_page_load;
     return 1;
-}
-
-=head3 wait_for_page_to_load($timeout)
-
-=cut
-
-sub wait_for_page_to_load {
-    my ($self, $timeout) = @_;
-
-    return $self->wait_for_condition(sub {
-        $self->view->get_load_status eq 'finished';
-    }, $timeout);
-}
-
-=head3 wait_for_element_present($locator, $timeout)
-
-=cut
-
-sub wait_for_element_present {
-    my ($self, $locator, $timeout) = @_;
-
-    return $self->wait_for_condition(sub {
-        $self->is_element_present($locator)
-    }, $timeout);
 }
 
 =head3 type($locator, $text)
@@ -642,27 +606,6 @@ sub shift_key_up {
     $self->modifiers->{'shift'} = 0;
 }
 
-=head3 pause($time)
-
-=cut
-
-sub pause {
-    my ($self, $time) = @_;
-
-    my $expiry = time + $time / 1000;
-
-    while (1) {
-        $self->process_events;
-
-        if (time < $expiry) {
-            usleep 10000;
-        }
-        else {
-            last;
-        }
-    }
-}
-
 =head3 mouse_over($locator)
 
 =cut
@@ -713,23 +656,6 @@ sub fire_mouse_event {
     return 1;
 }
 
-=head3 fire_event($locator, $event_type)
-
-=cut
-
-sub fire_event {
-    my ($self, $locator, $event_type) = @_;
-
-    my $document = $self->view->get_dom_document;
-    my $target = $self->resolve_locator($locator, $document) or return;
-
-    my $event = $document->create_event('HTMLEvents');
-    $event->init_event($event_type, TRUE, TRUE);
-    $target->dispatch_event($event);
-
-    return 1;
-}
-
 =head3 answer_on_next_confirm
 
 =cut
@@ -751,87 +677,6 @@ sub answer_on_next_prompt {
 }
 
 =head2 Additions to the Selenium API
-
-=head3 wait_for_pending_requests($timeout)
-
-Waits for all pending requests to finish. This is most useful for AJAX applications,
-since wait_for_page_to_load does not wait for AJAX requests.
-
-=cut
-
-sub wait_for_pending_requests {
-    my ($self, $timeout) = @_;
-
-    return $self->wait_for_condition(sub {
-        $self->pending == 0;
-    }, $timeout);
-}
-
-=head3 wait_for_element_to_disappear($locator, $timeout)
-
-Works just like wait_for_element_present but instead of waiting for the element to appear, it waits for the element to disappear.
-
-=cut
-
-sub wait_for_element_to_disappear {
-    my ($self, $locator, $timeout) = @_;
-
-    return $self->wait_for_condition(sub {
-        not $self->is_element_present($locator)
-    }, $timeout);
-}
-
-=head3 wait_for_alert($text, $timeout)
-
-Wait for an alert with the given text to happen.
-If $text is undef, it waits for any alert. Since alerts do not get automatically cleared, this has to be done manually before causing the action that is supposed to throw a new alert:
-
-    $webkit->alerts([]);
-    $webkit->click('...');
-    $webkit->wait_for_alert;
-
-=cut
-
-sub wait_for_alert {
-    my ($self, $text, $timeout) = @_;
-
-    return $self->wait_for_condition(sub {
-        defined $text ? (@{ $self->alerts } and $self->alerts->[-1] eq $text) : @{ $self->alerts };
-    }, $timeout);
-}
-
-=head3 wait_for_condition($condition, $timeout)
-
-Wait for the given $condition sub to return a true value or $timeout to expire.
-Returns the return value of $condition or 0 on timeout.
-
-    $webkit->wait_for_condition(sub {
-        $webkit->is_visible('id=foo');
-    }, 10000);
-
-=cut
-
-sub wait_for_condition {
-    my ($self, $condition, $timeout) = @_;
-
-    $timeout ||= $self->default_timeout;
-
-    my $expiry = time + $timeout / 1000;
-
-    $self->process_events;
-
-    my $result;
-    until ($result = $condition->()) {
-        $self->process_events;
-
-        return 0 if time > $expiry;
-        usleep 10000;
-    }
-
-    $self->process_events;
-
-    return $result;
-}
 
 =head3 native_drag_and_drop_to_position($source_locator, $target_x, $target_y, $options)
 
