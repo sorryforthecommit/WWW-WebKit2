@@ -1,7 +1,7 @@
-# This Makefile is for the WWW::WebKit extension to perl.
+# This Makefile is for the WWW::WebKit2 extension to perl.
 #
 # It was generated automatically by MakeMaker version
-# 7.24 (Revision: 72400) from the contents of
+# 7.34 (Revision: 73400) from the contents of
 # Makefile.PL. Don't edit this file, edit Makefile.PL instead.
 #
 #       ANY CHANGES MADE HERE WILL BE LOST!
@@ -11,7 +11,7 @@
 
 #   MakeMaker Parameters:
 
-#     ABSTRACT_FROM => q[lib/WWW/WebKit.pm]
+#     ABSTRACT_FROM => q[lib/WWW/WebKit2.pm]
 #     AUTHOR => [q[Stefan Seifert <nine@cpan.org>]]
 #     BUILD_REQUIRES => { Test::More=>q[0.88], URI=>q[0] }
 #     CONFIGURE_REQUIRES => { ExtUtils::Depends=>q[0], ExtUtils::MakeMaker=>q[0], ExtUtils::PkgConfig=>q[0], Glib::MakeHelper=>q[0] }
@@ -19,12 +19,12 @@
 #     INC => q[-pthread -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/libxkbcommon -I/usr/include/wayland -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libdrm -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0/include -I/usr/include/atk-1.0 -I/home/pl/perl5/lib/perl5/x86_64-linux-thread-multi/Glib/Install -I.]
 #     LIBS => q[-lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lcairo -lgobject-2.0 -lglib-2.0 -lgthread-2.0 -pthread]
 #     LICENSE => q[perl]
-#     NAME => q[WWW::WebKit]
+#     NAME => q[WWW::WebKit2]
 #     OBJECT => q[WebKit$(OBJ_EXT)]
 #     PREREQ_PM => { Carp=>q[0], Glib=>q[0], Gtk3=>q[0], Gtk3::WebKit=>q[0.02], Moose=>q[0], Test::More=>q[0.88], Time::HiRes=>q[0], URI=>q[0], X11::Xlib=>q[0] }
 #     TEST_REQUIRES => {  }
 #     TYPEMAPS => [q[/home/pl/perl5/lib/perl5/x86_64-linux-thread-multi/Glib/Install/typemap]]
-#     VERSION_FROM => q[lib/WWW/WebKit.pm]
+#     VERSION_FROM => q[lib/WWW/WebKit2.pm]
 #     XS => { WebKit.xs=>q[WebKit.c] }
 #     clean => { FILES=>q[WebKit$(OBJ_EXT)] }
 
@@ -63,13 +63,13 @@ VENDORLIBEXP = /usr/lib/perl5/vendor_perl/5.26.1
 AR_STATIC_ARGS = cr
 DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
-NAME = WWW::WebKit
-NAME_SYM = WWW_WebKit
-VERSION = 0.11
+NAME = WWW::WebKit2
+NAME_SYM = WWW_WebKit2
+VERSION = 0.1
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_11
+VERSION_SYM = 0_1
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.11
+XS_VERSION = 0.1
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -144,20 +144,20 @@ PERM_DIR = 755
 PERM_RW = 644
 PERM_RWX = 755
 
-MAKEMAKER   = /usr/lib/perl5/5.26.1/ExtUtils/MakeMaker.pm
-MM_VERSION  = 7.24
-MM_REVISION = 72400
+MAKEMAKER   = /home/pl/perl5/lib/perl5/ExtUtils/MakeMaker.pm
+MM_VERSION  = 7.34
+MM_REVISION = 73400
 
 # FULLEXT = Pathname for extension directory (eg Foo/Bar/Oracle).
 # BASEEXT = Basename part of FULLEXT. May be just equal FULLEXT. (eg Oracle)
 # PARENT_NAME = NAME without BASEEXT and no trailing :: (eg Foo::Bar)
 # DLBASE  = Basename part of dynamic library. May be just equal BASEEXT.
 MAKE = make
-FULLEXT = WWW/WebKit
-BASEEXT = WebKit
+FULLEXT = WWW/WebKit2
+BASEEXT = WebKit2
 PARENT_NAME = WWW
 DLBASE = $(BASEEXT)
-VERSION_FROM = lib/WWW/WebKit.pm
+VERSION_FROM = lib/WWW/WebKit2.pm
 INC = -pthread -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/libxkbcommon -I/usr/include/wayland -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libdrm -I/usr/include/libpng16 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0/include -I/usr/include/atk-1.0 -I/home/pl/perl5/lib/perl5/x86_64-linux-thread-multi/Glib/Install -I.
 DEFINE = 
 OBJECT = WebKit$(OBJ_EXT)
@@ -171,7 +171,14 @@ C_FILES  = WebKit.c
 O_FILES  = WebKit.o
 H_FILES  = ppport.h
 MAN1PODS = 
-MAN3PODS = lib/WWW/WebKit.pm
+MAN3PODS = lib/WWW/WebKit2.pm \
+	lib/WWW/WebKit2/Events.pm \
+	lib/WWW/WebKit2/Inspector.pm \
+	lib/WWW/WebKit2/KeyboardInput.pm \
+	lib/WWW/WebKit2/Locator.pm \
+	lib/WWW/WebKit2/LocatorCSS.pm \
+	lib/WWW/WebKit2/MouseInput.pm \
+	lib/WWW/WebKit2/Navigator.pm
 
 # Where is the Config information that we are using/depend on
 CONFIGDEP = $(PERL_ARCHLIBDEP)$(DFSEP)Config.pm $(PERL_INCDEP)$(DFSEP)config.h
@@ -194,11 +201,18 @@ PERL_ARCHIVEDEP    =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/WWW/WebKit.pm
+TO_INST_PM = lib/WWW/WebKit2.pm \
+	lib/WWW/WebKit2/Events.pm \
+	lib/WWW/WebKit2/Inspector.pm \
+	lib/WWW/WebKit2/KeyboardInput.pm \
+	lib/WWW/WebKit2/Locator.pm \
+	lib/WWW/WebKit2/LocatorCSS.pm \
+	lib/WWW/WebKit2/MouseInput.pm \
+	lib/WWW/WebKit2/Navigator.pm
 
 
 # --- MakeMaker platform_constants section:
-MM_Unix_VERSION = 7.24
+MM_Unix_VERSION = 7.34
 PERL_MALLOC_DEF = -DPERL_EXTMALLOC_DEF -Dmalloc=Perl_malloc -Dfree=Perl_mfree -Drealloc=Perl_realloc -Dcalloc=Perl_calloc
 
 
@@ -210,11 +224,11 @@ AUTOSPLITFILE = $(ABSPERLRUN)  -e 'use AutoSplit;  autosplit($$$$ARGV[0], $$$$AR
 
 # --- MakeMaker tool_xsubpp section:
 
-XSUBPPDIR = /usr/lib/perl5/5.26.1/ExtUtils
+XSUBPPDIR = /home/pl/perl5/lib/perl5/ExtUtils
 XSUBPP = "$(XSUBPPDIR)$(DFSEP)xsubpp"
 XSUBPPRUN = $(PERLRUN) $(XSUBPP)
 XSPROTOARG = 
-XSUBPPDEPS = /usr/lib/perl5/5.26.1/ExtUtils/typemap /home/pl/perl5/lib/perl5/x86_64-linux-thread-multi/Glib/Install/typemap /usr/lib/perl5/5.26.1/ExtUtils$(DFSEP)xsubpp
+XSUBPPDEPS = /usr/lib/perl5/5.26.1/ExtUtils/typemap /home/pl/perl5/lib/perl5/x86_64-linux-thread-multi/Glib/Install/typemap /home/pl/perl5/lib/perl5/ExtUtils$(DFSEP)xsubpp
 XSUBPPARGS = -typemap '/usr/lib/perl5/5.26.1/ExtUtils/typemap' -typemap '/home/pl/perl5/lib/perl5/x86_64-linux-thread-multi/Glib/Install/typemap'
 XSUBPP_EXTRA_ARGS =
 
@@ -271,8 +285,8 @@ CI = ci -u
 RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
-DISTNAME = WWW-WebKit
-DISTVNAME = WWW-WebKit-0.11
+DISTNAME = WWW-WebKit2
+DISTVNAME = WWW-WebKit2-0.1
 
 
 # --- MakeMaker macro section:
@@ -291,7 +305,7 @@ MPOLLUTE =
 
 # --- MakeMaker const_loadlibs section:
 
-# WWW::WebKit might depend on some other libraries:
+# WWW::WebKit2 might depend on some other libraries:
 # See ExtUtils::Liblist for details
 #
 EXTRALIBS = -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lcairo -lgobject-2.0 -lglib-2.0 -lgthread-2.0
@@ -487,10 +501,10 @@ OTHERLDFLAGS =
 INST_DYNAMIC_DEP = 
 INST_DYNAMIC_FIX = 
 
-$(INST_DYNAMIC) : $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DFSEP).exists $(EXPORT_LIST) $(PERL_ARCHIVEDEP) $(PERL_ARCHIVE_AFTER) $(INST_DYNAMIC_DEP)
+$(INST_DYNAMIC) : $(OBJECT) $(MYEXTLIB) $(INST_ARCHAUTODIR)$(DFSEP).exists $(EXPORT_LIST) $(PERL_ARCHIVEDEP) $(PERL_ARCHIVE_AFTER) $(INST_DYNAMIC_DEP) 
 	$(RM_F) $@
 	$(NOECHO) $(ECHO) [ LD $@ ]
-	$(NOECHO) LD_RUN_PATH="$(LD_RUN_PATH)" $(LD)  $(LDDLFLAGS) $(LDFROM) $(OTHERLDFLAGS) -o $@ $(MYEXTLIB) \
+	$(NOECHO) LD_RUN_PATH="$(LD_RUN_PATH)" $(LD)  $(LDDLFLAGS)  $(LDFROM) $(OTHERLDFLAGS) -o $@ $(MYEXTLIB) \
 	  $(PERL_ARCHIVE) $(LDLOADLIBS) $(PERL_ARCHIVE_AFTER) $(EXPORT_LIST) \
 	  $(INST_DYNAMIC_FIX)
 	$(CHMOD) $(PERM_RWX) $@
@@ -519,9 +533,23 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all config  \
-	lib/WWW/WebKit.pm
+	lib/WWW/WebKit2.pm \
+	lib/WWW/WebKit2/Events.pm \
+	lib/WWW/WebKit2/Inspector.pm \
+	lib/WWW/WebKit2/KeyboardInput.pm \
+	lib/WWW/WebKit2/Locator.pm \
+	lib/WWW/WebKit2/LocatorCSS.pm \
+	lib/WWW/WebKit2/MouseInput.pm \
+	lib/WWW/WebKit2/Navigator.pm
 	$(NOECHO) $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) -u \
-	  lib/WWW/WebKit.pm $(INST_MAN3DIR)/WWW::WebKit.$(MAN3EXT) 
+	  lib/WWW/WebKit2.pm $(INST_MAN3DIR)/WWW::WebKit2.$(MAN3EXT) \
+	  lib/WWW/WebKit2/Events.pm $(INST_MAN3DIR)/WWW::WebKit2::Events.$(MAN3EXT) \
+	  lib/WWW/WebKit2/Inspector.pm $(INST_MAN3DIR)/WWW::WebKit2::Inspector.$(MAN3EXT) \
+	  lib/WWW/WebKit2/KeyboardInput.pm $(INST_MAN3DIR)/WWW::WebKit2::KeyboardInput.$(MAN3EXT) \
+	  lib/WWW/WebKit2/Locator.pm $(INST_MAN3DIR)/WWW::WebKit2::Locator.$(MAN3EXT) \
+	  lib/WWW/WebKit2/LocatorCSS.pm $(INST_MAN3DIR)/WWW::WebKit2::LocatorCSS.$(MAN3EXT) \
+	  lib/WWW/WebKit2/MouseInput.pm $(INST_MAN3DIR)/WWW::WebKit2::MouseInput.$(MAN3EXT) \
+	  lib/WWW/WebKit2/Navigator.pm $(INST_MAN3DIR)/WWW::WebKit2::Navigator.$(MAN3EXT) 
 
 
 
@@ -594,7 +622,7 @@ realclean purge :: realclean_subdirs
 metafile : create_distdir
 	$(NOECHO) $(ECHO) Generating META.yml
 	$(NOECHO) $(ECHO) '---' > META_new.yml
-	$(NOECHO) $(ECHO) 'abstract: '\''Perl extension for controlling an embedding WebKit engine'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'abstract: '\''Perl extension for controlling an embedding WebKit2 engine'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'author:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  - '\''Stefan Seifert <nine@cpan.org>'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'build_requires:' >> META_new.yml
@@ -606,12 +634,12 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  ExtUtils::PkgConfig: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Glib::MakeHelper: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'dynamic_config: 1' >> META_new.yml
-	$(NOECHO) $(ECHO) 'generated_by: '\''ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.150010'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'generated_by: '\''ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'license: perl' >> META_new.yml
 	$(NOECHO) $(ECHO) 'meta-spec:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  url: http://module-build.sourceforge.net/META-spec-v1.4.html' >> META_new.yml
 	$(NOECHO) $(ECHO) '  version: '\''1.4'\''' >> META_new.yml
-	$(NOECHO) $(ECHO) 'name: WWW-WebKit' >> META_new.yml
+	$(NOECHO) $(ECHO) 'name: WWW-WebKit2' >> META_new.yml
 	$(NOECHO) $(ECHO) 'no_index:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  directory:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - t' >> META_new.yml
@@ -624,25 +652,25 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  Moose: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Time::HiRes: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  X11::Xlib: '\''0'\''' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: '\''0.11'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: '\''0.1'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'x_serialization_backend: '\''CPAN::Meta::YAML version 0.018'\''' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
 	$(NOECHO) $(ECHO) '{' > META_new.json
-	$(NOECHO) $(ECHO) '   "abstract" : "Perl extension for controlling an embedding WebKit engine",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "abstract" : "Perl extension for controlling an embedding WebKit2 engine",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "author" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '      "Stefan Seifert <nine@cpan.org>"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
 	$(NOECHO) $(ECHO) '   "dynamic_config" : 1,' >> META_new.json
-	$(NOECHO) $(ECHO) '   "generated_by" : "ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.150010",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "generated_by" : "ExtUtils::MakeMaker version 7.34, CPAN::Meta::Converter version 2.150010",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "license" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '      "perl_5"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
 	$(NOECHO) $(ECHO) '   "meta-spec" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",' >> META_new.json
-	$(NOECHO) $(ECHO) '      "version" : "2"' >> META_new.json
+	$(NOECHO) $(ECHO) '      "version" : 2' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
-	$(NOECHO) $(ECHO) '   "name" : "WWW-WebKit",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "name" : "WWW-WebKit2",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "no_index" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '      "directory" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '         "t",' >> META_new.json
@@ -677,8 +705,8 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.11",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "x_serialization_backend" : "JSON::PP version 2.27400_02"' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.1",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "x_serialization_backend" : "JSON::PP version 4.02"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
 
@@ -1058,38 +1086,45 @@ testdb_dynamic :: dynamic pure_all
 subdirs-test_static :: static pure_all
 
 test_static :: subdirs-test_static $(MAP_TARGET)
-	PERL_DL_NONLAZY=1 "/home/pl/work/WWW-WebKit/WWW-WebKit/$(MAP_TARGET)" $(MAP_PERLINC) "-MExtUtils::Command::MM" "-MTest::Harness" "-e" "undef *Test::Harness::Switches; test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
+	PERL_DL_NONLAZY=1 "/home/pl/lib/WWW-WebKit2/$(MAP_TARGET)" $(MAP_PERLINC) "-MExtUtils::Command::MM" "-MTest::Harness" "-e" "undef *Test::Harness::Switches; test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)
 
 testdb_static :: static pure_all $(MAP_TARGET)
-	PERL_DL_NONLAZY=1 "/home/pl/work/WWW-WebKit/WWW-WebKit/$(MAP_TARGET)" $(MAP_PERLINC) "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
+	PERL_DL_NONLAZY=1 "/home/pl/lib/WWW-WebKit2/$(MAP_TARGET)" $(MAP_PERLINC) "-I$(INST_LIB)" "-I$(INST_ARCHLIB)" $(TEST_FILE)
 
 
 
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="WWW-WebKit" VERSION="0.11">' > WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '    <ABSTRACT>Perl extension for controlling an embedding WebKit engine</ABSTRACT>' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '    <AUTHOR>Stefan Seifert &lt;nine@cpan.org&gt;</AUTHOR>' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Carp::" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Glib::" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Gtk3::" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Gtk3::WebKit" VERSION="0.02" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Moose::" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Time::HiRes" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="X11::Xlib" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-thread-multi-5.26" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> WWW-WebKit.ppd
-	$(NOECHO) $(ECHO) '</SOFTPKG>' >> WWW-WebKit.ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="WWW-WebKit2" VERSION="0.1">' > WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '    <ABSTRACT>Perl extension for controlling an embedding WebKit2 engine</ABSTRACT>' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '    <AUTHOR>Stefan Seifert &lt;nine@cpan.org&gt;</AUTHOR>' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Carp::" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Glib::" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Gtk3::" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Gtk3::WebKit" VERSION="0.02" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Moose::" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Time::HiRes" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="X11::Xlib" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-thread-multi-5.26" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> WWW-WebKit2.ppd
+	$(NOECHO) $(ECHO) '</SOFTPKG>' >> WWW-WebKit2.ppd
 
 
 # --- MakeMaker pm_to_blib section:
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  'lib/WWW/WebKit.pm' 'blib/lib/WWW/WebKit.pm' 
+	  'lib/WWW/WebKit2.pm' 'blib/lib/WWW/WebKit2.pm' \
+	  'lib/WWW/WebKit2/Events.pm' 'blib/lib/WWW/WebKit2/Events.pm' \
+	  'lib/WWW/WebKit2/Inspector.pm' 'blib/lib/WWW/WebKit2/Inspector.pm' \
+	  'lib/WWW/WebKit2/KeyboardInput.pm' 'blib/lib/WWW/WebKit2/KeyboardInput.pm' \
+	  'lib/WWW/WebKit2/Locator.pm' 'blib/lib/WWW/WebKit2/Locator.pm' \
+	  'lib/WWW/WebKit2/LocatorCSS.pm' 'blib/lib/WWW/WebKit2/LocatorCSS.pm' \
+	  'lib/WWW/WebKit2/MouseInput.pm' 'blib/lib/WWW/WebKit2/MouseInput.pm' \
+	  'lib/WWW/WebKit2/Navigator.pm' 'blib/lib/WWW/WebKit2/Navigator.pm' 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 

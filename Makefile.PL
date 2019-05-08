@@ -12,7 +12,7 @@ my %pm_files = (
 #  'XSHelper.pm' => '$(INST_LIBDIR)/XSHelper.pm',
 );
 
-my $deps = ExtUtils::Depends->new ('WWW::WebKit' => 'Glib');
+my $deps = ExtUtils::Depends->new ('WWW::WebKit2' => 'Glib');
 $deps->set_inc ($pkg_info{cflags}, $gtk_info{cflags});
 $deps->set_libs ($pkg_info{libs}, $gtk_info{libs});
 $deps->add_pm (%pm_files);
@@ -22,8 +22,8 @@ $deps->add_xs (@xs_files);
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
-    NAME              => 'WWW::WebKit',
-    VERSION_FROM      => 'lib/WWW/WebKit.pm', # finds $VERSION
+    NAME              => 'WWW::WebKit2',
+    VERSION_FROM      => 'lib/WWW/WebKit2.pm', # finds $VERSION
     LICENSE           => 'perl',
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => 0,
@@ -45,7 +45,7 @@ WriteMakefile(
         Carp                => 0,
     },
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM  => 'lib/WWW/WebKit.pm', # retrieve abstract from module
+      (ABSTRACT_FROM  => 'lib/WWW/WebKit2.pm', # retrieve abstract from module
        AUTHOR         => 'Stefan Seifert <nine@cpan.org>') : ()),
     LIBS              => [ExtUtils::PkgConfig->libs_only_L('gdk-3.0')], # e.g., '-lm'
     DEFINE            => '', # e.g., '-DHAVE_SOMETHING'
