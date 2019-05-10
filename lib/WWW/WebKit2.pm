@@ -19,7 +19,8 @@ WWW::WebKit2 - Perl extension for controlling an embedding WebKit2 engine
 
 =head1 DESCRIPTION
 
-WWW::WebKit is a drop-in replacement for WWW::Selenium using Gtk3::WebKit2 as browser instead of relying on an external Java server and an installed browser.
+WWW::WebKit2 is a drop-in replacement for WWW::Selenium using Gtk3::WebKit2
+as browser instead of relying on an external Java server and an installed browser.
 
 =head2 EXPORT
 
@@ -35,6 +36,7 @@ with 'WWW::WebKit2::KeyboardInput';
 with 'WWW::WebKit2::Events';
 with 'WWW::WebKit2::Navigator';
 with 'WWW::WebKit2::Inspector';
+with 'WWW::WebKit2::Settings';
 
 use lib 'lib';
 use lib '/home/pl/lib/Gtk3-WebKit2/lib';
@@ -180,8 +182,9 @@ has event_send_delay => (
 
 =head3 console_messages
 
-WWW::WebKit saves console messages in this array but still lets the default console handler handle the message.
-I'm not sure if this is the best way to go but you should be able to override this easily:
+WWW::WebKit saves console messages in this array but still lets the default console handler
+handle the message. I'm not sure if this is the best way to go but you should be able
+to override this easily:
 
     use Glib qw(TRUE FALSE);
     $webkit->view->signal_connect('console-message' => sub {
@@ -189,7 +192,8 @@ I'm not sure if this is the best way to go but you should be able to override th
         return TRUE;
     });
 
-The TRUE return value prevents any further handlers from kicking in which in turn should prevent any messages from getting printed.
+The TRUE return value prevents any further handlers from kicking in which in turn should
+prevent any messages from getting printed.
 
 =cut
 
@@ -274,20 +278,8 @@ sub init_webkit {
         }
 
         return TRUE;
-
-=head2
-        $self->view->signal_connect('script-prompt' => sub {
-            WWW::WebKit::XSHelper::set_string_return_value($_[4], pop @{ $self->prompt_answers });
-            return TRUE;
-        });
-=cut
     });
 
-# console-message does not exist anymore
-#    $self->view->signal_connect('console-message' => sub {
-#        push @{ $self->console_messages }, $_[1];
-#        return FALSE;
-#    });
     $self->view->signal_connect('print' => sub {
         push @{ $self->print_requests }, $_[1];
         return TRUE;
@@ -793,19 +785,6 @@ sub release_mouse_button {
 
     $self->display->XTestFakeButtonEvent($button, 0, $self->event_send_delay);
     $self->display->XFlush;
-}
-
-=head3 enable_file_access_from_file_urls
-
-=cut
-
-sub enable_file_access_from_file_urls {
-    my ($self) = @_;
-
-    my $settings = $self->view->get_settings;
-    $settings->set_allow_file_access_from_file_urls(TRUE);
-    $settings->set_allow_universal_access_from_file_urls(TRUE);
-    $self->view->set_settings($settings);
 }
 
 =head3 delete_text($locator)

@@ -241,35 +241,6 @@ sub check_window_bounds {
     return 1;
 }
 
-=head3 disable_plugins()
-
-Disables WebKit plugins. Use this if you don't need plugins like Java and Flash
-and want to for example silence plugin loading messages.
-
-=cut
-
-sub disable_plugins {
-    my ($self) = @_;
-
-    my $settings = $self->view->get_settings;
-    $settings->set_enable_plugins(FALSE);
-    $self->view->set_settings($settings);
-    return 1;
-}
-
-=head3 enable_plugins()
-
-=cut
-
-sub enable_plugins {
-    my ($self) = @_;
-
-    my $settings = $self->view->get_settings;
-    $settings->set_enable_plugins(TRUE);
-    $self->view->set_settings($settings);
-    return 1;
-}
-
 =head3 print_requested()
 
 =cut
