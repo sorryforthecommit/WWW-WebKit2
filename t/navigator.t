@@ -11,7 +11,7 @@ use URI;
 
 use_ok 'WWW::WebKit2';
 
-my $webkit = WWW::WebKit2->new(xvfb => 0);
+my $webkit = WWW::WebKit2->new(xvfb => 1);
 eval { $webkit->init; };
 if ($@ and $@ =~ /\ACould not start Xvfb/) {
     $webkit = WWW::WebKit2->new();
