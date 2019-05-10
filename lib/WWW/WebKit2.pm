@@ -274,7 +274,7 @@ sub init_webkit {
         }
 
         if ($type eq 'prompt') {
-            $dialog->set_text(pop @{ $self->prompt_answers });
+            $dialog->prompt_set_text(pop @{ $self->prompt_answers });
         }
 
         return TRUE;
@@ -315,8 +315,16 @@ sub process_events {
 
 sub process_page_load {
     my ($self) = @_;
-    Gtk3::main_iteration while Gtk3::events_pending or $self->load_status ne 'finished';
-    $self->load_status('ready_for_next_url');
+
+    Gtk3::main_iteration while Gtk3::events_pending or $self->is_loading;
+}
+
+sub is_loading {
+    my ($self) = @_;
+
+    return 1 if $self->view->is_loading;
+
+    return 0;
 }
 
 sub handle_resource_request {
@@ -492,112 +500,6 @@ sub change_check {
     return 1;
 }
 
-=head3 type($locator, $text)
-
-=cut
-
-sub type {
-    my ($self, $locator, $text) = @_;
-
-    $self->resolve_locator($locator)->set_value($text);
-
-    $self->process_page_load;
-
-    return 1;
-}
-
-my %keycodes = (
-    '\013' => 36,  # Carriage Return
-    "\n"   => 36,  # Carriage Return
-    '\9'   => 23,  # Tabulator
-    "\t"   => 23,  # Tabulator
-    '\027' => 9,   # Escape
-    ' '    => 65,  # Space
-    '\032' => 65,  # Space
-    '\127' => 119, # Delete
-    '\8'   => 22,  # Backspace
-    '\044' => 59,  # Comma
-    ','    => 59,  # Comma
-    '\045' => 20,  # Hyphen
-    '-'    => 20,  # Hyphen
-    '\046' => 60,  # Dot
-    '.'    => 60,  # Dot
-);
-
-sub key_press {
-    my ($self, $locator, $key, $elem) = @_;
-    my $display = X11::Xlib->new;
-
-    my $keycode = exists $keycodes{$key} ? $keycodes{$key} : $display->XKeysymToKeycode(X11::Xlib::XStringToKeysym($key));
-
-    $elem ||= $self->resolve_locator($locator) or return;
-    $elem->focus;
-
-    my $shift_keycode = 62;
-    $display->XTestFakeKeyEvent($shift_keycode, 1, 1) if $self->modifiers->{'shift'};
-    $display->XTestFakeKeyEvent($keycode, 1, 1);
-    $display->XTestFakeKeyEvent($keycode, 0, 1);
-    $display->XTestFakeKeyEvent($shift_keycode, 0, 1) if $self->modifiers->{'shift'};
-    $display->XFlush;
-
-    usleep 50000; # time for the X server to deliver the event
-
-    # Unfortunately just does nothing:
-    #Gtk3::test_widget_send_key($self->view, int($key), 'GDK_MODIFIER_MASK');
-
-    $self->process_page_load;
-
-    return 1;
-}
-
-=head3 type_keys($locator, $string)
-
-=cut
-
-sub type_keys {
-    my ($self, $locator, $string) = @_;
-
-    my $element = $self->resolve_locator($locator) or return;
-
-    foreach (split //, $string) {
-        $self->shift_key_down if $self->is_upper_case($_);
-        $self->key_press($locator, $_, $element) or return;
-        $self->shift_key_up if $self->is_upper_case($_);
-    }
-
-    return 1;
-}
-
-sub is_upper_case {
-    my ($self, $char) = @_;
-
-    return $char =~ /[A-Z]/;
-}
-
-sub control_key_down {
-    my ($self) = @_;
-
-    $self->modifiers->{control} = 1;
-}
-
-sub control_key_up {
-    my ($self) = @_;
-
-    $self->modifiers->{control} = 0;
-}
-
-sub shift_key_down {
-    my ($self) = @_;
-
-    $self->modifiers->{'shift'} = 1;
-}
-
-sub shift_key_up {
-    my ($self) = @_;
-
-    $self->modifiers->{'shift'} = 0;
-}
-
 =head3 mouse_over($locator)
 
 =cut
@@ -646,26 +548,6 @@ sub fire_mouse_event {
 
     $self->process_page_load;
     return 1;
-}
-
-=head3 answer_on_next_confirm
-
-=cut
-
-sub answer_on_next_confirm {
-    my ($self, $answer) = @_;
-
-    push @{ $self->confirm_answers }, $answer;
-}
-
-=head3 answer_on_next_prompt($answer)
-
-=cut
-
-sub answer_on_next_prompt {
-    my ($self, $answer) = @_;
-
-    push @{ $self->prompt_answers }, $answer;
 }
 
 =head2 Additions to the Selenium API
@@ -785,24 +667,6 @@ sub release_mouse_button {
 
     $self->display->XTestFakeButtonEvent($button, 0, $self->event_send_delay);
     $self->display->XFlush;
-}
-
-=head3 delete_text($locator)
-
-Delete text in elements where contenteditable="true".
-
-=cut
-
-sub delete_text {
-    my ($self, $locator) = @_;
-
-    my $element = $self->resolve_locator($locator) or return;
-
-    while ($self->get_text($locator)) {
-        $self->key_press($locator, '\127', $element); # Delete
-    };
-
-    return 1;
 }
 
 1;

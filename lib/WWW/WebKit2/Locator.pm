@@ -76,6 +76,18 @@ sub get_attribute {
     return $self->property_search("getAttribute('$attribute')");
 }
 
+=head2 set_attribute
+
+=cut
+
+sub set_attribute {
+    my ($self, $attribute, $value) = @_;
+
+    $value =~ s/'/\\'/gis;
+
+    return $self->property_search("setAttribute('$attribute', '$value')");
+}
+
 =head2 get_property
 
 =cut
@@ -123,7 +135,17 @@ sub get_checked {
 sub get_value {
     my ($self) = @_;
 
-    return $self->get_attribute("value");
+    return $self->property_search('value');
+}
+
+=head2 set_value
+
+=cut
+
+sub set_value {
+    my ($self, $value) = @_;
+
+    return $self->property_search('value = "' . $value . '";');
 }
 
 =head2 get_length
@@ -154,6 +176,16 @@ sub get_screen_position {
 
     my $result = decode_json $self->inspector->run_javascript($search);
     return ($result->{x}, $result->{y});
+}
+
+=head2 focus
+
+=cut
+
+sub focus {
+    my ($self) = @_;
+
+    return decode_json $self->property_search('focus()');
 }
 
 =head2 submit
