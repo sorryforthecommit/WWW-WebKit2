@@ -11,34 +11,75 @@ use URI;
 
 use_ok 'WWW::WebKit2';
 
-my $sel = WWW::WebKit2->new(xvfb => 1);
-eval { $sel->init; };
+my $webkit = WWW::WebKit2->new(xvfb => 1);
+eval { $webkit->init; };
 if ($@ and $@ =~ /\ACould not start Xvfb/) {
-    $sel = WWW::WebKit2->new();
-    $sel->init;
+    $webkit = WWW::WebKit2->new();
+    $webkit->init;
 }
 elsif ($@) {
     diag($@);
     fail('init webkit');
 }
 
-$sel->open("$Bin/test/load.html");
-ok(1, 'opened');
+$webkit->open("$Bin/test/keyboard.html");
 
-=head2
+my $text = 'test';
+is($webkit->get_value('//input'), "1", "input value is 1");
+$webkit->type('//input', $text);
+is($webkit->get_value('//input'), $text, "input value is $text");
 
-type($locator, $text)
-key_press($locator, $key, $elem)
-type_keys($locator, $string)
-is_upper_case($char)
-control_key_down
-control_key_up
-shift_key_down
-shift_key_up
-answer_on_next_confirm($answer)
-answer_on_next_prompt($answer)
-delete_text($locator) (for contenteditable=true)
+$webkit->resolve_locator('//input')->set_value('');
+$webkit->type_keys('//input', '1,5 Bar');
+$webkit->wait_for_condition(sub {
+    $webkit->get_value('//input') eq '1,5 Bar'
+});
 
-=cut
+$webkit->resolve_locator('//input')->set_value('');
+$webkit->type_keys('//input', "Foo Bar");
+$webkit->wait_for_condition(sub {
+    $webkit->get_value('//input') eq "Foo Bar"
+});
+
+$webkit->delete_text('css=#editable');
+
+$webkit->open("$Bin/test/key_press.html");
+$webkit->key_press('css=body', '\027');
+$webkit->wait_for_alert;
+is(pop @{ $webkit->alerts }, 27);
+$webkit->key_press('css=body', '\013');
+$webkit->wait_for_alert('13');
+is(pop @{ $webkit->alerts }, 13);
+$webkit->key_press('css=body', 'a');
+$webkit->wait_for_alert('65');
+is(pop @{ $webkit->alerts }, 65);
+$webkit->key_press('css=body', '\032');
+$webkit->wait_for_alert;
+is(pop @{ $webkit->alerts }, 32);
+
+my $default_confirm = $webkit->accept_confirm;
+$webkit->accept_confirm(0);
+
+$webkit->open("$Bin/test/confirm.html");
+is($webkit->get_text('id=result'), 'no');
+$webkit->accept_confirm($default_confirm);
+
+$webkit->answer_on_next_confirm(1);
+$webkit->open("$Bin/test/confirm.html");
+is(pop @{ $webkit->confirmations }, 'test');
+is($webkit->get_text('id=result'), 'yes');
+
+$webkit->accept_confirm(1);
+$webkit->open("$Bin/test/confirm.html");
+is($webkit->get_text('id=result'), 'yes');
+$webkit->accept_confirm($default_confirm);
+
+$webkit->answer_on_next_confirm(0);
+$webkit->open("$Bin/test/confirm.html");
+is($webkit->get_text('id=result'), 'no');
+
+$webkit->answer_on_next_prompt('test answer');
+$webkit->open("$Bin/test/prompt.html");
+is($webkit->get_text('id=result'), 'test answer');
 
 done_testing;

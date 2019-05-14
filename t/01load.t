@@ -37,31 +37,6 @@ is($sel->resolve_locator('id=dragme')->get_parent_node->Gtk3::WebKit::DOMElement
 
 $sel->refresh;
 
-my $default_confirm = $sel->accept_confirm;
-$sel->accept_confirm(0);
-
-$sel->open("$Bin/test/confirm.html");
-is($sel->get_text('id=result'), 'no');
-$sel->accept_confirm($default_confirm);
-
-$sel->answer_on_next_confirm(1);
-$sel->open("$Bin/test/confirm.html");
-is(pop @{ $sel->confirmations }, 'test');
-is($sel->get_text('id=result'), 'yes');
-
-$sel->accept_confirm(1);
-$sel->open("$Bin/test/confirm.html");
-is($sel->get_text('id=result'), 'yes');
-$sel->accept_confirm($default_confirm);
-
-$sel->answer_on_next_confirm(0);
-$sel->open("$Bin/test/confirm.html");
-is($sel->get_text('id=result'), 'no');
-
-$sel->answer_on_next_prompt('test answer');
-$sel->open("$Bin/test/prompt.html");
-is($sel->get_text('id=result'), 'test answer');
-
 $sel->open("$Bin/test/print.html");
 ok($sel->print_requested, "print requested");
 ok((not $sel->print_requested), "print isn't requested a second time");
@@ -84,20 +59,6 @@ is($sel->get_attribute('name=checkbox@checked'), 'checked');
 
 is($sel->uncheck('name=checkbox'), 1);
 ok(not $sel->get_attribute('name=checkbox@checked'));
-
-$sel->open("$Bin/test/key_press.html");
-$sel->key_press('css=body', '\027');
-$sel->wait_for_alert;
-is(pop @{ $sel->alerts }, 27);
-$sel->key_press('css=body', '\013');
-$sel->wait_for_alert('13');
-is(pop @{ $sel->alerts }, 13);
-$sel->key_press('css=body', 'a');
-$sel->wait_for_alert('65');
-is(pop @{ $sel->alerts }, 65);
-$sel->key_press('css=body', '\032');
-$sel->wait_for_alert;
-is(pop @{ $sel->alerts }, 32);
 
 $sel->open("$Bin/test/ordered.html");
 ok($sel->is_ordered('id=first', 'id=second'), 'is_ordered is correct for ordered elements');
@@ -126,14 +87,6 @@ $sel->type_keys('id=foo', '1,5 Bar');
 $sel->click('id=submit');
 $sel->wait_for_condition(sub {
     URI->new($sel->view->get_uri)->query eq 'foo=1%2C5+Bar'
-});
-
-$sel->open("$Bin/test/delete.html");
-$sel->delete_text('id=foo');
-$sel->delete_text('id=bar');
-$sel->click('id=submit');
-$sel->wait_for_condition(sub {
-    URI->new($sel->view->get_uri)->query eq 'foo2=&bar2=&baz2=27+Baz'
 });
 
 $sel->open("$Bin/test/select.html");

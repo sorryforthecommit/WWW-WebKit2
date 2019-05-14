@@ -101,8 +101,7 @@ sub wait_for_page_to_load {
     my ($self, $timeout) = @_;
 
     return $self->wait_for_condition(sub {
-        $self->load_status eq 'ready_for_next_url' or
-        $self->load_status eq 'finished';
+        not $self->is_loading
     }, $timeout);
 }
 
