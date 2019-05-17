@@ -88,6 +88,16 @@ sub set_attribute {
     return $self->property_search("setAttribute('$attribute', '$value')");
 }
 
+=head2 remove_attribute
+
+=cut
+
+sub remove_attribute {
+    my ($self, $attribute) = @_;
+
+    return $self->property_search("removeAttribute('$attribute')");
+}
+
 =head2 get_property
 
 =cut

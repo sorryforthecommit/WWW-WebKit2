@@ -33,10 +33,10 @@ sub change_check {
     my ($self, $element, $set_checked) = @_;
 
     if ($set_checked) {
-        $element->set_attribute('true');
+        $element->set_attribute('checked', 'checked');
     }
     else {
-        $element->set_attribute('false');
+        $element->remove_attribute('checked');
     }
 
     return 1;
@@ -248,4 +248,3 @@ sub native_drag_and_drop_to_object {
 }
 
 1;
-
