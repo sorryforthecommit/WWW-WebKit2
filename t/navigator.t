@@ -27,8 +27,7 @@ $webkit->refresh;
 $webkit->open("$Bin/test/type.html");
 $webkit->go_back;
 
-# submitting leads to a "URL can't be shown" error, but technically it works.
-$webkit->open("$Bin/test/type.html");
+$webkit->open("file://$Bin/test/type.html");
 $webkit->submit('css=form');
 
 done_testing;

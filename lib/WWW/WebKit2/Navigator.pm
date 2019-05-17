@@ -10,7 +10,7 @@ use File::Slurper 'read_text';
 sub open {
     my ($self, $url) = @_;
 
-    if ($url =~ /http/) {
+    if ($url =~ /^http:/ or $url =~ /^file:/) {
         $self->view->load_uri($url);
     }
     else {
