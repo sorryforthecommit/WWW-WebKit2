@@ -11,7 +11,7 @@ use URI;
 
 use_ok 'WWW::WebKit2';
 
-my $sel = WWW::WebKit2->new(xvfb => 1);
+my $sel = WWW::WebKit2->new(xvfb => 0);
 eval { $sel->init; };
 if ($@ and $@ =~ /\ACould not start Xvfb/) {
     $sel = WWW::WebKit2->new();
@@ -62,19 +62,43 @@ is($sel->eval_js('document.getElementById("foo").firstChild.data'), 'bar');
 $sel->refresh;
 $sel->open("$Bin/test/type.html");
 $sel->type('id=foo', 'bar');
-ok($sel->view->get_uri);
-
-$sel->open("$Bin/test/type.html");
-$sel->type_keys('id=foo', 'bar');
 $sel->click('id=submitter');
+# my ($x, $y ) = $sel->get_screen_position('id=submitter');
+# $sel->move_mouse_abs($x+5, $y+5);
+# $sel->press_mouse_button(1);
+# # $sel->pause(500);
+# $sel->release_mouse_button(0);
+# $sel->pause(1500);
+warn 'me';
+ok($sel->view->get_uri);
+warn 'actually hell';
+$sel->open("$Bin/test/type.html");
+warn 'no meeee';
+$sel->type_keys('id=foo', 'bar');
+# $sel->click('id=submitter');
+my ($x, $y ) = $sel->get_screen_position('id=submitter');
+$sel->move_mouse_abs($x+5, $y+5);
+$sel->press_mouse_button(1);
+# $sel->pause(500);
+$sel->release_mouse_button(0);
+# $sel->pause(1500);
 
 $sel->open("$Bin/test/type.html");
 $sel->type_keys('id=foo', '1,5 Bar');
-$sel->click('id=submitter');
+# $sel->click('id=submitter');
+($x, $y ) = $sel->get_screen_position('id=submitter');
+$sel->move_mouse_abs($x+5, $y+5);
+$sel->press_mouse_button(1);
+# $sel->pause(500);
+$sel->release_mouse_button(0);
+# $sel->pause(1500);
+
 
 $sel->open("$Bin/test/select.html");
 $sel->select('id=test', 'value=1');
-$sel->click('id=submitter');
+# $sel->click('id=submitter');
+
+
 
 is(pop @{ $sel->alerts }, 'onchange fired');
 $sel->select('id=test_event', 'value=1');
