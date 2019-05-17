@@ -141,6 +141,7 @@ sub get_value {
 
     if (
         lc $element->get_node_name eq 'input'
+        and $element->get_property('type')
         and $element->get_property('type') =~ /\A(checkbox|radio)\z/
     ) {
         return $element->get_checked ? 'on' : 'off';
