@@ -5,7 +5,6 @@ use utf8;
 use Capture::Tiny qw(capture);
 use Test::More;
 use lib 'lib';
-use lib '/home/pl/lib';
 use FindBin qw($Bin $RealBin);
 use lib "$Bin/../../Gtk3-WebKit2/lib";
 use URI;
