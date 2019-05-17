@@ -30,6 +30,8 @@ sub get_json_from_javascript_result {
     my $value = $self->view->run_javascript_finish($result);
     my $js_value = $value->get_js_value;
 
+    return undef if $js_value->is_null;
+
     return $js_value->to_string if $js_value->is_string;
 
     my $json = JSON->new;
@@ -108,7 +110,14 @@ sub get_text {
 
 sub eval_js {
     my ($self, $javascript_string) = @_;
-    return decode_json $self->run_javascript($javascript_string);
+    my $evaluated = $self->run_javascript($javascript_string);
+
+    my $decoded_json = eval { decode_json($evaluated) };
+    if ($@) {
+        return $evaluated;
+    }
+
+    return $decoded_json;
 }
 
 =head3 get_xpath_count

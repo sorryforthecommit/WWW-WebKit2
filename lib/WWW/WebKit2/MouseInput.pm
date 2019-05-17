@@ -26,7 +26,11 @@ sub select {
         select_element.value = option_element;
     ';
 
+    $select->fire_event('change');
+
     $self->run_javascript($set_select);
+
+    return 1;
 }
 
 sub change_check {
@@ -50,11 +54,8 @@ sub check {
     my ($self, $locator) = @_;
 
     my $element = $self->resolve_locator($locator);
-    $self->change_check($element, 'true');
-
-    return;
+    return $self->change_check($element, 'true');
 }
-
 
 =head3 uncheck($locator)
 
@@ -64,9 +65,7 @@ sub uncheck {
     my ($self, $locator) = @_;
 
     my $element = $self->resolve_locator($locator);
-    $self->change_check($element, undef);
-
-    return;
+    return $self->change_check($element, undef);
 }
 
 sub click {
@@ -199,19 +198,12 @@ Drag source element and drop it into target element.
 sub native_drag_and_drop_to_object {
     my ($self, $source_locator, $target_locator, $options) = @_;
 
-    my $target = $self->resolve_locator($target_locator)->get_length
-        or croak "did not find element $target_locator";
-
-    my $source = $self->resolve_locator($source_locator)->get_length
-        or croak "did not find element $source_locator";
-
     my $steps = $options->{steps} // 5;
     my $step_delay =  $options->{step_delay} // 150; # ms
     $self->event_send_delay($options->{event_send_delay}) if $options->{event_send_delay};
 
     my ($x, $y) = $self->get_center_screen_position($source_locator);
     $self->check_window_bounds($x, $y, "source '$source_locator'");
-
 
     $self->pause($step_delay);
     $self->move_mouse_abs($x, $y);

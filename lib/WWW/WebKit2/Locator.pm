@@ -56,6 +56,16 @@ sub get_tag_name {
     return $self->property_search('tagName');
 }
 
+=head2 get_id
+
+=cut
+
+sub get_id {
+    my ($self) = @_;
+
+    return $self->property_search('id');
+}
+
 =head2 get_node_name
 
 =cut
@@ -73,7 +83,9 @@ sub get_node_name {
 sub get_attribute {
     my ($self, $attribute) = @_;
 
-    return $self->property_search("getAttribute('$attribute')");
+    my $value = $self->property_search("getAttribute('$attribute')");
+
+    return $value;
 }
 
 =head2 set_attribute
@@ -240,6 +252,11 @@ sub is_visible {
             if (e == undefined) {
                 return 0;
             }
+
+            if(getComputedStyle(e).visibility === 'hidden') {
+                return 0;
+            }
+
             var visible = !!( e.offsetWidth || e.offsetHeight || e.getClientRects().length );
             return visible ? 1 : 0;
         }
