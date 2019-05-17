@@ -1,0 +1,9 @@
+Makefile
+Makefile.old
+*.o
+*.bs
+WebKit.c
+*.tar.gz
+blib
+pm_to_blib
+MYMETA.*
