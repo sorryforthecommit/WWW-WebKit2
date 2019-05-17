@@ -66,12 +66,16 @@ ok($sel->view->get_uri);
 
 $sel->open("$Bin/test/type.html");
 $sel->type_keys('id=foo', 'bar');
+$sel->click('id=submitter');
 
 $sel->open("$Bin/test/type.html");
 $sel->type_keys('id=foo', '1,5 Bar');
+$sel->click('id=submitter');
 
 $sel->open("$Bin/test/select.html");
 $sel->select('id=test', 'value=1');
+$sel->click('id=submitter');
+
 is(pop @{ $sel->alerts }, 'onchange fired');
 $sel->select('id=test_event', 'value=1');
 is(pop @{ $sel->alerts }, 'change event fired');

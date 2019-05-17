@@ -71,15 +71,8 @@ sub uncheck {
 sub click {
     my ($self, $locator) = @_;
 
-    my $element = $self->resolve_locator($locator);
-    my $click_script =
-        $element->prepare_element .
-        "element.click();"
-    ;
-
-    $self->run_javascript($click_script);
-
-    return;
+    my $mouse_click = $self->resolve_locator($locator);
+    return $self->fire_mouse_event($mouse_click, 'click');
 }
 
 sub mouse_over {
@@ -234,7 +227,6 @@ sub native_drag_and_drop_to_object {
     $self->pause($step_delay);
     $self->move_mouse_abs($x, $y);
     $self->pause($step_delay);
-    $self->pause(300);
     $self->is_loading;
 
 }
