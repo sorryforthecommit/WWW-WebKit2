@@ -193,7 +193,9 @@ sub get_screen_position {
         'var boundingrect = element.getBoundingClientRect();
          var element_top = boundingrect.top + window.scrollY;
          var element_left = boundingrect.left + window.scrollX;
-         var result = { "y": element_top, "x": element_left };
+         var win_left = window.screenLeft ? window.screenLeft : window.screenX;
+         var win_top = window.screenTop ? window.screenTop : window.screenY;
+         var result = { "y": element_top + win_top, "x": element_left + win_left };
          JSON.stringify(result)';
 
     my $result = decode_json $self->inspector->run_javascript($search);

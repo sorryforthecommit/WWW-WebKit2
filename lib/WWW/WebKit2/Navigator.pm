@@ -49,7 +49,8 @@ sub go_back {
 sub submit {
     my ($self, $locator) = @_;
 
-    $self->click($locator);
+    my $form = $self->resolve_locator($locator) or return;
+    $form->submit;
 
     $self->process_page_load;
 

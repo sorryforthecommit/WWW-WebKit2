@@ -17,20 +17,21 @@
         }
     </script>
     <style type="text/css">
-            #mouse_down_test{
+        #mouse_down_test{
             width:200px;
             height:100px;
             background:blue;
         }
-            #mouse_up_test{
+        #mouse_up_test{
             width:200px;
             height:100px;
             background:yellow;
         }
-            #click_test{
+        #click_test{
             width:200px;
             height:100px;
             background:black;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -55,12 +56,11 @@
         <li id="test_item_one">Coffee</li>
         <li id="test_item_two">Tea</li>
     </ul>
-    <div id="click_test"  onclick="alert('Test Alert')"> </div>
+    <div id="click_test" onclick="alert('Test Alert')"> </div>
     <div id="mouse_down_test" onmousedown="mouse_down_test()"></div>
     <div id="mouse_up_test" onmouseup="mouse_up_test()"></div>
 </body>
     <script>
-
         var test_item_one = document.getElementById("test_item_one");
         test_item_one.addEventListener("mouseover", function( event ) {
             var test_item_new = document.createElement("LI");

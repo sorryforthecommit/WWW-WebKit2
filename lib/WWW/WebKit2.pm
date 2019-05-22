@@ -256,6 +256,10 @@ sub init_webkit {
     $self->display;
     Gtk3::init;
 
+    $self->view->signal_connect('submit-form' => sub {
+        return $self->handle_form_submission(@_);
+    });
+
     $self->view->signal_connect('script-dialog' => sub {
         my ($dialog) = $_[1];
         my $message = $dialog->get_message;
@@ -325,6 +329,12 @@ sub is_loading {
     return 1 if $self->view->is_loading;
 
     return 0;
+}
+
+sub handle_form_submission {
+    my ($self, $view, $request) = @_;
+
+    $request->submit;
 }
 
 sub handle_resource_request {

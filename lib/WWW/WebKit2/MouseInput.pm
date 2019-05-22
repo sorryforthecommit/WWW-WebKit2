@@ -71,11 +71,23 @@ sub uncheck {
 sub click {
     my ($self, $locator) = @_;
 
-    my ($x, $y ) = $self->get_screen_position($locator);
+    my ($x, $y) = $self->get_center_screen_position($locator);
     $self->move_mouse_abs($x, $y);
-    $self->press_mouse_button(1);
+    $self->left_click;
 
-    $self->release_mouse_button(0);
+    return 1;
+}
+
+sub left_click {
+    my ($self) = @_;
+
+    $self->pause($self->event_send_delay);
+    $self->press_mouse_button(1);
+    $self->pause($self->event_send_delay);
+    $self->release_mouse_button(1);
+    $self->pause(1000);
+
+    $self->process_events;
 
     return 1;
 }
@@ -153,7 +165,6 @@ Drag source element and drop it to position $target_x, $target_y.
 sub native_drag_and_drop_to_position {
     my ($self, $source_locator, $target_x, $target_y, $options) = @_;
     $self->check_window_bounds($target_x, $target_y, "target");
-
 
     my $steps = $options->{steps} // 5;
     my $step_delay =  $options->{step_delay} // 150; # ms
