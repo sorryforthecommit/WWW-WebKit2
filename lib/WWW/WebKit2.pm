@@ -117,6 +117,7 @@ has window => (
         $win->set_title($self->window_title);
         $win->set_decorated(0);
         $win->set_default_size($self->window_width, $self->window_height);
+        $win->signal_connect(delete_event => sub { Gtk3->main_quit });
         $win->add($sw);
 
         return $win;
@@ -233,6 +234,18 @@ has load_status => (
     default => sub { '' },
 );
 
+has events => (
+    traits  => ['Array'],
+    is      => 'rw',
+    isa     => 'ArrayRef',
+    default => sub { [] },
+    handles => {
+        clear_events => 'clear',
+        find_event   => 'first',
+        add_event    => 'push',
+    },
+);
+
 =head2 METHODS
 
 =head3 init
@@ -255,6 +268,20 @@ sub init_webkit {
     # connect to X server to keep it alive till we don't need it anymore
     $self->display;
     Gtk3::init;
+
+    $self->view->signal_connect('event' => sub {
+        my ($view, $event) = @_;
+
+        return 0; # needs to return 0 to propagate event
+    });
+
+    $self->view->signal_connect('event-after' => sub {
+        my ($view, $event) = @_;
+
+        $self->add_event($event) if $self;
+
+        return 0; # needs to return 0 to propagate event
+    });
 
     $self->view->signal_connect('submit-form' => sub {
         return $self->handle_form_submission(@_);
@@ -314,6 +341,7 @@ sub pending {
 
 sub process_events {
     my ($self) = @_;
+
     Gtk3::main_iteration while Gtk3::events_pending;
 }
 

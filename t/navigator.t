@@ -29,7 +29,6 @@ $webkit->go_back;
 
 $webkit->open("file://$Bin/test/type.html");
 $webkit->submit('css=form');
-$webkit->pause(1000); #FIXME apparently submit doesn't wait on its own
 is($webkit->view->get_uri, "file://$Bin/test/type.html?foo=foo");
 is($webkit->run_javascript('window.location.href'), "file://$Bin/test/type.html?foo=foo");
 

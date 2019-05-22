@@ -50,9 +50,8 @@ sub submit {
     my ($self, $locator) = @_;
 
     my $form = $self->resolve_locator($locator) or return;
-    $form->submit;
 
-    $self->process_page_load;
+    $form->submit;
 
     return 1;
 }

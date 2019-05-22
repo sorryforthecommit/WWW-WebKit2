@@ -219,7 +219,15 @@ sub focus {
 sub submit {
     my ($self) = @_;
 
-    return decode_json $self->property_search('submit()');
+    $self->property_search('submit()');
+
+    $self->inspector->wait_for_condition(sub {
+        $self->inspector->load_status eq 'started'
+    });
+
+    $self->inspector->process_page_load;
+
+    return 1;
 }
 
 =head2 fire_event

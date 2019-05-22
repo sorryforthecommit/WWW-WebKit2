@@ -81,15 +81,39 @@ sub click {
 sub left_click {
     my ($self) = @_;
 
-    $self->pause($self->event_send_delay);
+    $self->clear_events;
     $self->press_mouse_button(1);
-    $self->pause($self->event_send_delay);
-    $self->release_mouse_button(1);
-    $self->pause(1000);
+    $self->wait_for_mouse_click_event;
+    $self->pause(100);
 
-    $self->process_events;
+    $self->clear_events;
+    $self->release_mouse_button(1);
+    $self->wait_for_mouse_click_event;
+    $self->pause(100);
 
     return 1;
+}
+
+sub wait_for_mouse_motion_event {
+    my ($self, $mouse_click) = @_;
+
+    $self->wait_for_condition(sub {
+        $self->find_event(sub {
+            my $event_type = scalar $_;
+            return $event_type =~ /EventMotion/;
+        });
+    });
+}
+
+sub wait_for_mouse_click_event {
+    my ($self, $mouse_click) = @_;
+
+    $self->wait_for_condition(sub {
+        $self->find_event(sub {
+            my $event_type = scalar $_;
+            return $event_type =~ /EventButton/;
+        });
+    });
 }
 
 sub mouse_over {
@@ -179,7 +203,9 @@ sub native_drag_and_drop_to_position {
 
     $self->move_mouse_abs($source_x, $source_y);
     $self->pause($step_delay);
+    $self->clear_events;
     $self->press_mouse_button(1);
+    $self->wait_for_mouse_click_event;
     $self->pause($step_delay);
 
     foreach (1..$steps) {
