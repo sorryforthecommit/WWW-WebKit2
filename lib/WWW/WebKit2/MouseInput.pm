@@ -71,6 +71,16 @@ sub uncheck {
 sub click {
     my ($self, $locator) = @_;
 
+    my $element = $self->resolve_locator($locator);
+    $element->property_search('style.border ="2px solid red"');
+    $element->property_search('style.background ="green"');
+    $element->scroll_into_view;
+
+    unless ($element->is_visible) {
+        warn "ELEMENT IS NOT VISIBLE: " . $locator;
+        return $self->fire_mouse_event($element, 'click');
+    }
+
     my ($x, $y) = $self->get_center_screen_position($locator);
     $self->move_mouse_abs($x, $y);
     $self->left_click;
@@ -153,7 +163,7 @@ sub fire_mouse_event {
 
     my $mouse_up_script = $element->prepare_element .
         " var clickEvent = document.createEvent('MouseEvents');
-        clickEvent.initEvent ('$event', true, true);
+        clickEvent.initMouseEvent ('$event', true, true);
         element.dispatchEvent(clickEvent);
     ";
     $self->run_javascript($mouse_up_script);

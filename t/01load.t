@@ -56,20 +56,19 @@ ok($sel->is_ordered('id=first', 'id=second'), 'is_ordered is correct for ordered
 ok((not $sel->is_ordered('id=second', 'id=first')), 'is_ordered detects wrong order correctly');
 
 $sel->open("$Bin/test/eval.html");
-is($sel->eval_js('"foo"'), 'foo');
-is($sel->eval_js('document.getElementById("foo").firstChild.data'), 'bar');
+is($sel->eval_js('"foo"'), 'foo', 'string evaluated');
+is($sel->eval_js('document.getElementById("foo").firstChild.data'), 'bar', 'js evaluated');
 
 $sel->refresh;
 $sel->open("$Bin/test/type.html");
 $sel->type('id=foo', 'bar');
-$sel->click('id=submitter');
+ok($sel->click('id=submitter'), 'clicked on submitter');
 
-ok($sel->view->get_uri);
-
+ok($sel->view->get_uri, 'got uri');
 $sel->open("$Bin/test/type.html");
 
-$sel->type_keys('id=foo', 'bar');
-$sel->click('id=submitter');
+ok($sel->type_keys('id=foo', 'bar'), 'typed bar');
+ok($sel->click('id=submitter'), 'clicked on another submitter');
 
 $sel->open("$Bin/test/type.html");
 $sel->type_keys('id=foo', '1,5 Bar');

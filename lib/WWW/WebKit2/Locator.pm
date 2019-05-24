@@ -182,6 +182,16 @@ sub get_length {
     return decode_json $self->inspector->run_javascript($search);
 }
 
+=head2 scroll_into_view
+
+=cut
+
+sub scroll_into_view {
+    my ($self) = @_;
+
+    return $self->property_search('scrollIntoView()');
+}
+
 =head2 get_screen_position
 
 =cut
@@ -191,8 +201,8 @@ sub get_screen_position {
 
     my $search = $self->prepare_element .
         'var boundingrect = element.getBoundingClientRect();
-         var element_top = boundingrect.top + window.scrollY;
-         var element_left = boundingrect.left + window.scrollX;
+         var element_top = boundingrect.top;
+         var element_left = boundingrect.left;
          var win_left = window.screenLeft ? window.screenLeft : window.screenX;
          var win_top = window.screenTop ? window.screenTop : window.screenY;
          var result = { "y": element_top + win_top, "x": element_left + win_left };
