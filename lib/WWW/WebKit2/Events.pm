@@ -59,6 +59,7 @@ sub wait_for_condition {
     my $result;
     until ($result = $condition->()) {
         $self->process_events;
+
         return 0 if time > $expiry;
         usleep 10000;
     }

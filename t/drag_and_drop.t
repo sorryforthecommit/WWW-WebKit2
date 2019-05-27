@@ -26,17 +26,20 @@ $webkit->open("$Bin/test/drag_and_drop.html");
 $webkit->native_drag_and_drop_to_object('id=dragme', 'id=target');
 ok($webkit->is_element_present('xpath=//div[@id="target"]//div[@id="dragme"]'), 'Element has been successfully dragged');
 
+
 my $slider_location = '//input[@id="slider_range"]';
 my $resolved_location = $webkit->resolve_locator($slider_location);
 my ($target_x, $target_y) = $resolved_location->get_screen_position;
 my $slider_value = $resolved_location->get_value;
 
+$webkit->pause(1500);
 $webkit->native_drag_and_drop_to_position(
     $slider_location,
     $target_x - 5,
     $target_y
 );
 
+$webkit->pause(1500);
 my $new_slider_value = $resolved_location->get_value;
 isnt($slider_value, $new_slider_value, 'Slider has been updated by drag and drop to position');
 

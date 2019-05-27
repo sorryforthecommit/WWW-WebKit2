@@ -56,27 +56,22 @@ ok($sel->is_ordered('id=first', 'id=second'), 'is_ordered is correct for ordered
 ok((not $sel->is_ordered('id=second', 'id=first')), 'is_ordered detects wrong order correctly');
 
 $sel->open("$Bin/test/eval.html");
-is($sel->eval_js('"foo"'), 'foo', 'string evaluated');
-is($sel->eval_js('document.getElementById("foo").firstChild.data'), 'bar', 'js evaluated');
+is($sel->eval_js('"foo"'), 'foo');
+is($sel->eval_js('document.getElementById("foo").firstChild.data'), 'bar');
 
 $sel->refresh;
 $sel->open("$Bin/test/type.html");
 $sel->type('id=foo', 'bar');
-ok($sel->click('id=submitter'), 'clicked on submitter');
+ok($sel->view->get_uri);
 
-ok($sel->view->get_uri, 'got uri');
 $sel->open("$Bin/test/type.html");
-
-ok($sel->type_keys('id=foo', 'bar'), 'typed bar');
-ok($sel->click('id=submitter'), 'clicked on another submitter');
+$sel->type_keys('id=foo', 'bar');
 
 $sel->open("$Bin/test/type.html");
 $sel->type_keys('id=foo', '1,5 Bar');
-$sel->click('id=submitter');
 
 $sel->open("$Bin/test/select.html");
 $sel->select('id=test', 'value=1');
-
 is(pop @{ $sel->alerts }, 'onchange fired');
 $sel->select('id=test_event', 'value=1');
 is(pop @{ $sel->alerts }, 'change event fired');

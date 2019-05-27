@@ -48,14 +48,12 @@ $webkit->mouse_down('//div[@id="mouse_down_test"]');
 my $mouse_down_result = $webkit->resolve_locator('.//div[@id="mouse_down_test"]');
 is($mouse_down_result->get_attribute('value'), 'mouse_is_pressed_down', 'pressing the mouse down updates the value');
 
+
 $webkit->mouse_up('//div[@id="mouse_up_test"]');
 my $mouse_up_result = $webkit->resolve_locator('.//div[@id="mouse_up_test"]');
 is($mouse_up_result->get_attribute('value'), 'mouse_has_been_released', 'Mouse released updated value.');
 
 $webkit->click('.//div[@id="click_test"]');
 is($webkit->get_alert, 'Test Alert', 'Alert was triggered after button click');
-
-$webkit->click('.//div[@id="click_test_out_of_sight"]');
-is($webkit->get_alert, 'Found me!', 'Found element to click on after scrolling');
 
 done_testing;

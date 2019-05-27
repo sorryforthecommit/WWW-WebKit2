@@ -17,29 +17,20 @@
         }
     </script>
     <style type="text/css">
-        #mouse_down_test{
-            width: 200px;
-            height: 100px;
-            background: blue;
+            #mouse_down_test{
+            width:200px;
+            height:100px;
+            background:blue;
         }
-        #mouse_up_test{
-            width: 200px;
-            height: 100px;
-            background: yellow;
+            #mouse_up_test{
+            width:200px;
+            height:100px;
+            background:yellow;
         }
-        #click_test{
-            width: 200px;
-            height: 100px;
-            background: black;
-            cursor: pointer;
-        }
-        #click_test_out_of_sight {
-            position: absolute;
-            top: 2000px;
-            left: 0;
-            width: 200px;
-            height: 200px;
-            background: green;
+            #click_test{
+            width:200px;
+            height:100px;
+            background:black;
         }
     </style>
 </head>
@@ -64,12 +55,12 @@
         <li id="test_item_one">Coffee</li>
         <li id="test_item_two">Tea</li>
     </ul>
-    <div id="click_test" onclick="alert('Test Alert')"> </div>
-    <div id="click_test_out_of_sight" onclick="alert('Found me!')"></div>
+    <div id="click_test"  onclick="alert('Test Alert')"> </div>
     <div id="mouse_down_test" onmousedown="mouse_down_test()"></div>
     <div id="mouse_up_test" onmouseup="mouse_up_test()"></div>
 </body>
     <script>
+
         var test_item_one = document.getElementById("test_item_one");
         test_item_one.addEventListener("mouseover", function( event ) {
             var test_item_new = document.createElement("LI");

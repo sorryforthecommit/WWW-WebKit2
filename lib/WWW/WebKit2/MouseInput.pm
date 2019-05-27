@@ -12,7 +12,9 @@ has event_send_delay => (
 sub select {
     my ($self, $select, $option) = @_;
 
+    my $select_dummy = $select;
     $select = $self->resolve_locator($select) or return;
+
     $option = $self->resolve_locator($option) or return;
 
     my $option_value = $option->get_value;
@@ -70,62 +72,14 @@ sub click {
     my ($self, $locator) = @_;
 
     my $element = $self->resolve_locator($locator);
+    my $click_script =
+        $element->prepare_element .
+        "element.click();"
+    ;
 
-    die "Element doesn't exist: " . $locator unless $element->get_length;
+    $self->run_javascript($click_script);
 
-    $element->property_search('style.border ="2px solid red"');
-    $element->property_search('style.background ="green"');
-    $element->scroll_into_view;
-
-    unless ($element->is_visible) {
-        die "ELEMENT IS NOT VISIBLE: " . $locator;
-    }
-
-    my ($x, $y) = $self->get_center_screen_position($locator);
-    $self->move_mouse_abs($x, $y);
-    $self->left_click;
-
-    $self->process_page_load;
-
-    return 1;
-}
-
-sub left_click {
-    my ($self) = @_;
-
-    $self->clear_events;
-    $self->press_mouse_button(1);
-    $self->wait_for_mouse_click_event;
-    $self->pause(100);
-
-    $self->clear_events;
-    $self->release_mouse_button(1);
-    $self->wait_for_mouse_click_event;
-    $self->pause(100);
-
-    return 1;
-}
-
-sub wait_for_mouse_motion_event {
-    my ($self) = @_;
-
-    $self->wait_for_condition(sub {
-        $self->find_event(sub {
-            my $event_type = scalar $_;
-            return $event_type =~ /EventMotion/;
-        });
-    });
-}
-
-sub wait_for_mouse_click_event {
-    my ($self) = @_;
-
-    $self->wait_for_condition(sub {
-        $self->find_event(sub {
-            my $event_type = scalar $_;
-            return $event_type =~ /EventButton/;
-        });
-    });
+    return;
 }
 
 sub mouse_over {
@@ -165,7 +119,7 @@ sub fire_mouse_event {
 
     my $mouse_up_script = $element->prepare_element .
         " var clickEvent = document.createEvent('MouseEvents');
-        clickEvent.initMouseEvent ('$event', true, true);
+        clickEvent.initEvent ('$event', true, true);
         element.dispatchEvent(clickEvent);
     ";
     $self->run_javascript($mouse_up_script);
@@ -202,6 +156,7 @@ sub native_drag_and_drop_to_position {
     my ($self, $source_locator, $target_x, $target_y, $options) = @_;
     $self->check_window_bounds($target_x, $target_y, "target");
 
+
     my $steps = $options->{steps} // 5;
     my $step_delay =  $options->{step_delay} // 150; # ms
     $self->event_send_delay($options->{event_send_delay}) if $options->{event_send_delay};
@@ -215,9 +170,7 @@ sub native_drag_and_drop_to_position {
 
     $self->move_mouse_abs($source_x, $source_y);
     $self->pause($step_delay);
-    $self->clear_events;
     $self->press_mouse_button(1);
-    $self->wait_for_mouse_click_event;
     $self->pause($step_delay);
 
     foreach (1..$steps) {
@@ -281,6 +234,7 @@ sub native_drag_and_drop_to_object {
     $self->pause($step_delay);
     $self->move_mouse_abs($x, $y);
     $self->pause($step_delay);
+    $self->pause(300);
     $self->is_loading;
 
 }
