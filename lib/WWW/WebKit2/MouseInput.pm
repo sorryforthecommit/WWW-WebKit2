@@ -12,9 +12,7 @@ has event_send_delay => (
 sub select {
     my ($self, $select, $option) = @_;
 
-    my $select_dummy = $select;
     $select = $self->resolve_locator($select) or return;
-
     $option = $self->resolve_locator($option) or return;
 
     my $option_value = $option->get_value;
@@ -72,18 +70,22 @@ sub click {
     my ($self, $locator) = @_;
 
     my $element = $self->resolve_locator($locator);
+
+    die "Element doesn't exist: " . $locator unless $element->get_length;
+
     $element->property_search('style.border ="2px solid red"');
     $element->property_search('style.background ="green"');
     $element->scroll_into_view;
 
     unless ($element->is_visible) {
-        warn "ELEMENT IS NOT VISIBLE: " . $locator;
-        return $self->fire_mouse_event($element, 'click');
+        die "ELEMENT IS NOT VISIBLE: " . $locator;
     }
 
     my ($x, $y) = $self->get_center_screen_position($locator);
     $self->move_mouse_abs($x, $y);
     $self->left_click;
+
+    $self->process_page_load;
 
     return 1;
 }
@@ -105,7 +107,7 @@ sub left_click {
 }
 
 sub wait_for_mouse_motion_event {
-    my ($self, $mouse_click) = @_;
+    my ($self) = @_;
 
     $self->wait_for_condition(sub {
         $self->find_event(sub {
@@ -116,7 +118,7 @@ sub wait_for_mouse_motion_event {
 }
 
 sub wait_for_mouse_click_event {
-    my ($self, $mouse_click) = @_;
+    my ($self) = @_;
 
     $self->wait_for_condition(sub {
         $self->find_event(sub {

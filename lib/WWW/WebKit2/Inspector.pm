@@ -184,6 +184,7 @@ sub get_center_screen_position {
     my $element = $self->resolve_locator($locator);
 
     my ($x, $y) = $element->get_screen_position;
+
     $x += $element->get_offset_width / 2;
     $y += $element->get_offset_height / 2;
 
