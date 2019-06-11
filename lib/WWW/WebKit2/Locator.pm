@@ -304,24 +304,26 @@ sub resolve_locator {
             ? qq{.//a[not(descendant-or-self::text())]}
             : qq{.//a[descendant-or-self::text()="$link"]};
     }
-     elsif (my ($value) = $locator =~ /^value=(.*)/) {
-         return qq{.//*[\@value="$value"]};
-     }
-     elsif (my ($index) = $locator =~ /^index=(.*)/) {
-         return qq{.//option[position()="$index"]};
-     }
-     elsif (my ($id) = $locator =~ /^id=(.*)/) {
-         return qq{.//*[\@id="$id"]};
-     }
-     elsif (my ($class) = $locator =~ /^class=(.*)/) {
-         return qq{.//*[contains(\@class, "$class")]};
-     }
-     elsif (my ($name) = $locator =~ /^name=(.*)/) {
-         return qq{.//*[\@name="$name"]};
-     }
-     elsif (my ($xpath) = $locator =~ /^(?: xpath=)?(.*)/xm) {
-         return $xpath;
-     }
+    elsif (my ($value) = $locator =~ /^value=(.*)/) {
+        return qq{.//*[\@value="$value"]};
+    }
+    elsif (my ($index) = $locator =~ /^index=(.*)/) {
+        return qq{.//option[position()="$index"]};
+    }
+    elsif (my ($id) = $locator =~ /^id=(.*)/) {
+        return qq{.//*[\@id="$id"]};
+    }
+    elsif (my ($class) = $locator =~ /^class=(.*)/) {
+        return qq{.//*[contains(\@class, "$class")]};
+    }
+    elsif (my ($name) = $locator =~ /^name=(.*)/) {
+        return qq{.//*[\@name="$name"]};
+    }
+    elsif (my ($xpath) = $locator =~ /^(?: xpath=)?(.*)/xm) {
+        return $xpath;
+    }
+
+    return;
 }
 
 my $get_elements_function = q{
