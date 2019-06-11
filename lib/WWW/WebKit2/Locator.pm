@@ -322,6 +322,9 @@ sub resolve_locator {
     elsif (my ($xpath) = $locator =~ /^(?: xpath=)?(.*)/xm) {
         return $xpath;
     }
+    elsif (my ($xpath_fallback) = $locator =~ /^(\/\/.*)/xm) {
+        return $xpath_fallback;
+    }
 
     return;
 }
