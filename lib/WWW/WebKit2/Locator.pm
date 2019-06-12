@@ -10,6 +10,11 @@ has 'locator_string' => (
     required => 1,
 );
 
+has 'locator_parent' => (
+    is  => 'ro',
+    isa => 'Maybe[WWW::WebKit2::Locator]',
+);
+
 has 'inspector' => (
     is       => 'ro',
     isa      => 'WWW::WebKit2',
@@ -304,24 +309,29 @@ sub resolve_locator {
             ? qq{.//a[not(descendant-or-self::text())]}
             : qq{.//a[descendant-or-self::text()="$link"]};
     }
-     elsif (my ($value) = $locator =~ /^value=(.*)/) {
-         return qq{.//*[\@value="$value"]};
-     }
-     elsif (my ($index) = $locator =~ /^index=(.*)/) {
-         return qq{.//option[position()="$index"]};
-     }
-     elsif (my ($id) = $locator =~ /^id=(.*)/) {
-         return qq{.//*[\@id="$id"]};
-     }
-     elsif (my ($class) = $locator =~ /^class=(.*)/) {
-         return qq{.//*[contains(\@class, "$class")]};
-     }
-     elsif (my ($name) = $locator =~ /^name=(.*)/) {
-         return qq{.//*[\@name="$name"]};
-     }
-     elsif (my ($xpath) = $locator =~ /^(?: xpath=)?(.*)/xm) {
-         return $xpath;
-     }
+    elsif (my ($value) = $locator =~ /^value=(.*)/) {
+        return qq{.//*[\@value="$value"]};
+    }
+    elsif (my ($index) = $locator =~ /^index=(.*)/) {
+        return qq{.//option[position()="$index"]};
+    }
+    elsif (my ($id) = $locator =~ /^id=(.*)/) {
+        return qq{.//*[\@id="$id"]};
+    }
+    elsif (my ($class) = $locator =~ /^class=(.*)/) {
+        return qq{.//*[contains(\@class, "$class")]};
+    }
+    elsif (my ($name) = $locator =~ /^name=(.*)/) {
+        return qq{.//*[\@name="$name"]};
+    }
+    elsif (my ($xpath) = $locator =~ /^(?: xpath=)?(.*)/xm) {
+        return $xpath;
+    }
+    elsif (my ($xpath_fallback) = $locator =~ /^(\/\/.*)/xm) {
+        return $xpath_fallback;
+    }
+
+    return;
 }
 
 my $get_elements_function = q{
@@ -345,9 +355,24 @@ sub prepare_element {
 
     my $locator = $self->resolved_locator;
 
+    my ($get_parent, $parent_param) = ('', '');
+
+    if ($self->locator_parent) {
+
+        my $locator_string_parent = $self->locator_parent->resolve_locator;
+
+        $get_parent = "
+            var parent = getElementsByXPath('" . $locator_string_parent . "');
+            parent = parent[0];
+        ";
+
+        $parent_param = ", parent";
+    }
+
     my $search = "
         $get_elements_function
-        var element = getElementsByXPath('$locator');
+        $get_parent
+        var element = getElementsByXPath('$locator'$parent_param);
         element = element[0];
     ";
 
