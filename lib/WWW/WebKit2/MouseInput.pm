@@ -24,9 +24,11 @@ sub select {
         select_element.value = option_element;
     ';
 
+    $self->run_javascript($set_select);
+
     $select->fire_event('change');
 
-    $self->run_javascript($set_select);
+    $self->process_page_load;
 
     return 1;
 }
