@@ -13,7 +13,7 @@ sub select {
     my ($self, $select, $option) = @_;
 
     $select = $self->resolve_locator($select) or return;
-    $option = $self->resolve_locator($option) or return;
+    $option = $self->resolve_locator($option, $select) or return;
 
     my $option_value = $option->get_value;
     my $set_select =

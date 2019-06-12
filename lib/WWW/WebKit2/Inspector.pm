@@ -45,7 +45,7 @@ sub get_json_from_javascript_result {
 =cut
 
 sub resolve_locator {
-    my ($self, $locator) = @_;
+    my ($self, $locator, $locator_parent) = @_;
 
     if (my ($css) = $locator =~ /^css=(.*)/) {
         return WWW::WebKit2::LocatorCSS->new({
@@ -56,6 +56,7 @@ sub resolve_locator {
 
     return WWW::WebKit2::Locator->new({
         locator_string => $locator,
+        locator_parent => $locator_parent,
         inspector      => $self,
     });
 }

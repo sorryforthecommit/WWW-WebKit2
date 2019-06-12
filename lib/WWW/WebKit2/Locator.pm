@@ -10,6 +10,11 @@ has 'locator_string' => (
     required => 1,
 );
 
+has 'locator_parent' => (
+    is  => 'ro',
+    isa => 'Maybe[WWW::WebKit2::Locator]',
+);
+
 has 'inspector' => (
     is       => 'ro',
     isa      => 'WWW::WebKit2',
@@ -350,9 +355,24 @@ sub prepare_element {
 
     my $locator = $self->resolved_locator;
 
+    my ($get_parent, $parent_param) = ('', '');
+
+    if ($self->locator_parent) {
+
+        my $locator_string_parent = $self->locator_parent->resolve_locator;
+
+        $get_parent = "
+            var parent = getElementsByXPath('" . $locator_string_parent . "');
+            parent = parent[0];
+        ";
+
+        $parent_param = ", parent";
+    }
+
     my $search = "
         $get_elements_function
-        var element = getElementsByXPath('$locator');
+        $get_parent
+        var element = getElementsByXPath('$locator'$parent_param);
         element = element[0];
     ";
 
