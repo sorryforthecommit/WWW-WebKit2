@@ -38,7 +38,10 @@ has 'resolved_locator' => (
 sub get_text {
     my ($self) = @_;
 
-    return $self->property_search('textContent');
+    my $text = $self->property_search('textContent');
+    $text =~ s/\A \s+ | \s+ \z//gxm;
+    $text =~ s/\s+/ /gxms; # squeeze white space
+    return $text;
 }
 
 =head2 get_inner_html
