@@ -54,6 +54,16 @@ sub get_inner_html {
     return $self->property_search('innerHTML');
 }
 
+=head2 set_inner_html
+
+=cut
+
+sub set_inner_html {
+    my ($self, $value) = @_;
+
+    return $self->property_search('innerHTML = "' . $value . '";');
+}
+
 =head2 get_tag_name
 
 =cut
