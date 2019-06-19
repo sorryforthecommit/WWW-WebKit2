@@ -45,6 +45,7 @@ sub change_check {
     else {
         $element->remove_attribute('checked');
     }
+    $element->fire_event('change');
 
     return 1;
 }
