@@ -79,4 +79,6 @@ ok(not($webkit->is_visible("css=.invisible")), "span is invisible");
 is($webkit->resolve_locator("css=.positioned")->get_offset_width, 75, "offset width ok");
 is($webkit->resolve_locator("css=.positioned")->get_offset_height, 50, "offset height ok");
 
+ok ($webkit->resolve_locator("css=body input[name='username']")->get_tag_name);
+
 done_testing;
