@@ -6,7 +6,6 @@ use Test::More;
 use lib 'lib';
 use FindBin qw($Bin $RealBin);
 use lib "$Bin/../../Gtk3-WebKit2/lib";
-use URI;
 
 use_ok 'WWW::WebKit2';
 

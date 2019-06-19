@@ -1,11 +1,11 @@
-WWW-Webkit
+WWW-Webkit2
 ================================
 
-WWW::WebKit is a drop-in replacement for WWW::Selenium using Gtk3::WebKit
+WWW::WebKit2 is a drop-in replacement for WWW::WebKit using Gtk3::WebKit
 as browser instead of relying on an external Java server and an installed
 browser.
 
-See perldoc of WWW::WebKit for more information.
+See perldoc of WWW::WebKit2 for more information.
 
 INSTALLATION
 
@@ -21,7 +21,7 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
   Gtk3
-  Gtk3::WebKit
+  Gtk3::WebKit2
   Glib::Object::Introspection
   X11::Xlib
 
@@ -31,11 +31,11 @@ On openSUSE, the following packages have to be installed:
 DEVELOPMENT VERSION
 
 The current development version can be found in the git repository at:
-https://github.com/niner/WWW-WebKit
+https://github.com/sorryforthecommit/WWW-WebKit2
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2011 by Stefan Seifert
+This software is Copyright (c) 2019 by Jason Carty.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.3 or,

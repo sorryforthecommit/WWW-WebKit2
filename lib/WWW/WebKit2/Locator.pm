@@ -1,6 +1,7 @@
 package WWW::WebKit2::Locator;
 
-use common::sense;
+use strict;
+use warnings;
 use JSON qw(decode_json encode_json);
 use Moose;
 

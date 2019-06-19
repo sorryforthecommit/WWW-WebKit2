@@ -36,17 +36,22 @@ WriteMakefile(
         'Test::More' => 0.88,
     },
     PREREQ_PM         => {
-        'Gtk3'              => 0,
-        'Gtk3::WebKit'      => 0.02,
-        Glib                => 0,
-        Moose               => 0,
-        'Time::HiRes'       => 0,
-        'X11::Xlib'         => 0,
-        Carp                => 0,
+        'Gtk3'                 => 0,
+        'Gtk3::WebKit2'        => 0.02,
+        'Gtk3::JavaScriptCore' => 0,
+        Glib                   => 1.329,
+        Moose                  => 2.2011,
+        'Moose::Role'          => 2.2011,
+        'Time::HiRes'          => 1.9760,
+        'X11::Xlib'            => 0.18,
+        Carp                   => 1.50,
+        constant               => 1.33,
+        'File::Sluper'         => 0.012,
+
     },
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/WWW/WebKit2.pm', # retrieve abstract from module
-       AUTHOR         => 'Stefan Seifert <nine@cpan.org>') : ()),
+       AUTHOR         => 'Jason Carty <jc@blueyonder.co.uk>') : ()),
     LIBS              => [ExtUtils::PkgConfig->libs_only_L('gdk-3.0')], # e.g., '-lm'
     DEFINE            => '', # e.g., '-DHAVE_SOMETHING'
     INC               => $pkg_info{cflags},

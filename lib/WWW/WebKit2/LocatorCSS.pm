@@ -1,6 +1,5 @@
 package WWW::WebKit2::LocatorCSS;
 
-use common::sense;
 use Moose;
 use base 'WWW::WebKit2::Locator';
 
