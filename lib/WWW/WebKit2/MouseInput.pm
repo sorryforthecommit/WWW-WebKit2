@@ -18,10 +18,13 @@ sub select {
     my $option_value = $option->get_value;
     my $set_select =
         $select->prepare_element .
-        'var select_element = element;
-        var option_element = ' . "'$option_value'" .
-        ';
-        select_element.value = option_element;
+        'var options = element.options;
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].value === ' . "'$option_value'" . ' ) {
+                options[i].selected = true;
+                break;
+            }
+        }
     ';
 
     $self->run_javascript($set_select);
