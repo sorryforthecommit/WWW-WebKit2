@@ -42,6 +42,17 @@ $webkit->uncheck('.//input[@id="radiotest_one"]');
 $radio_value = $webkit->resolve_locator('.//input[@id="radiotest_one"]')->property_search('checked');
 is($radio_value, 'false', 'Radio is now set to false');
 
+# checkboxes with click
+my $checkbox_value = $webkit->resolve_locator('.//input[@id="checkboxtest"]')->property_search('checked');
+is($checkbox_value, 'false', 'Radio value is currently false');
+$webkit->click('.//input[@id="checkboxtest"]');
+$checkbox_value = $webkit->resolve_locator('.//input[@id="checkboxtest"]')->property_search('checked');
+is($checkbox_value, 'true', 'checkbox is set to true');
+
+$webkit->click('.//input[@id="checkboxtest"]');
+$checkbox_value = $webkit->resolve_locator('.//input[@id="checkboxtest"]')->property_search('checked');
+is($checkbox_value, 'false', 'checkbox is now set to false');
+
 $webkit->mouse_over('.//li[@id="test_item_one"]');
 my $mouse_over_result = $webkit->resolve_locator('.//li[@id="test_item_new"]');
 is($mouse_over_result->get_attribute('value'),'value_added' , 'mouse over worked as expected');
@@ -59,5 +70,8 @@ is($webkit->get_alert, 'Test Alert', 'Alert was triggered after button click');
 
 $webkit->click('.//div[@id="click_test_out_of_sight"]');
 is($webkit->get_alert, 'Found me!', 'Found element to click on after scrolling');
+
+$webkit->click('id=invisible_1');
+is($webkit->get_alert, 'Found invisible!', 'Clicked invisible element');
 
 done_testing;

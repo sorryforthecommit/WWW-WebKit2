@@ -46,6 +46,7 @@ sub change_check {
         $element->remove_attribute('checked');
     }
     $element->fire_event('change');
+    $self->process_page_load;
 
     return 1;
 }
@@ -81,15 +82,27 @@ sub click {
 
     $element->property_search('style.border ="2px solid red"');
     $element->property_search('style.background ="green"');
-    $element->scroll_into_view;
 
-    unless ($element->is_visible) {
-        die "ELEMENT IS NOT VISIBLE: " . $locator;
+    my $tag  = lc $element->get_node_name;
+    my $type = lc ($element->get_attribute('type') // '');
+
+    if ($tag eq 'input' and ($type eq 'checkbox' or $type eq 'radio')) {
+        $element->property_search('click()');
+        $element->fire_event('click');
+    }
+    elsif (($tag eq 'input' and ($type eq 'submit' or $type eq 'image'))
+        or $tag eq 'submit'
+        or ($tag eq 'button' and $type eq 'submit')) {
+
+        $element->property_search('click()');
+        $self->wait_for_condition(sub {
+            $self->load_status eq 'started'
+        });
+    }
+    else{
+        $element->fire_event('click');
     }
 
-    my ($x, $y) = $self->get_center_screen_position($locator);
-    $self->move_mouse_abs($x, $y);
-    $self->left_click;
 
     $self->process_page_load;
 

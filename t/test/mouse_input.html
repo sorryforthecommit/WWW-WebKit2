@@ -41,6 +41,13 @@
             height: 200px;
             background: green;
         }
+
+        div.container {
+            visibility: hidden;
+        }
+        div.container ul.hide {
+            display: none;
+        }
     </style>
 </head>
 <body id="body">
@@ -59,6 +66,8 @@
         <input type="radio" id="radiotest_two" value="radiotest_two" name="radiotest">
         <label for="radiotest_two">Radio Test Two</label>
         <br>
+        <input type="checkbox" id="checkboxtest" value="checkboxtest" name="checboxtest">
+        <label for="checkboxtest">Checkbox Test One</label>
     </form>
     <ul id="test_list">
         <li id="test_item_one">Coffee</li>
@@ -68,6 +77,17 @@
     <div id="click_test_out_of_sight" onclick="alert('Found me!')"></div>
     <div id="mouse_down_test" onmousedown="mouse_down_test()"></div>
     <div id="mouse_up_test" onmouseup="mouse_up_test()"></div>
+
+    <div class='container'>
+        <ul class='hide'>
+            <li>
+                <span id='invisible_1' onclick="alert('Found invisible!')">Item 1</span>
+            </li>
+            <li>
+                <span>Item 2</span>
+            </li>
+        </ul>
+    </div>
 </body>
     <script>
         var test_item_one = document.getElementById("test_item_one");
