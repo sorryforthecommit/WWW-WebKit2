@@ -30,6 +30,8 @@ $webkit->select('.//select[@name="dropdown_list"]', './/option[@value="testtwo"]
 my $updated_select_value = $webkit->resolve_locator('.//select[@name="dropdown_list"]')->property_search('selectedOptions[0].value');
 is($updated_select_value, 'testtwo', 'Test Two is the new selected value');
 
+$webkit->select('css=#body .form select[name="dropdown_list"]', 'label=Testone');
+
 my $radio_value = $webkit->resolve_locator('.//input[@id="radiotest_one"]')->property_search('checked');
 is($radio_value, '"false"', 'Radio value is currently false');
 $webkit->check('.//input[@id="radiotest_one"]');

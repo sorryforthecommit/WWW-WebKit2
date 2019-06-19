@@ -39,7 +39,9 @@ sub prepare_element {
 =cut
 
 sub prepare_elements {
-    my ($self) = @_;
+    my ($self, $element_name) = @_;
+
+    $element_name //= 'element';
 
     my $locator = $self->resolved_locator;
 

@@ -364,29 +364,25 @@ my $get_elements_function = q{
 =cut
 
 sub prepare_element {
-    my ($self) = @_;
+    my ($self, $element_name) = @_;
+
+    $element_name //= 'element';
 
     my $locator = $self->resolved_locator;
 
-    my ($get_parent, $parent_param) = ('', '');
+    my ($parent, $parent_param) = ('', '');
 
     if ($self->locator_parent) {
 
-        my $locator_string_parent = $self->locator_parent->resolve_locator;
-
-        $get_parent = "
-            var parent = getElementsByXPath('" . $locator_string_parent . "');
-            parent = parent[0];
-        ";
-
+        $parent = $self->locator_parent->prepare_element('parent');
         $parent_param = ", parent";
     }
 
     my $search = "
         $get_elements_function
-        $get_parent
-        var element = getElementsByXPath('$locator'$parent_param);
-        element = element[0];
+        $parent
+        var $element_name = getElementsByXPath('$locator'$parent_param);
+        $element_name = $element_name" . "[0];
     ";
 
     return $search;
