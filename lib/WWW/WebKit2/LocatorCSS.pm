@@ -25,11 +25,12 @@ sub resolve_locator {
 =cut
 
 sub prepare_element {
-    my ($self) = @_;
+    my ($self, $element_name) = @_;
+    $element_name //= 'element';
 
     my $locator = $self->resolved_locator;
 
-    my $search = "var element = document.querySelector('$locator');";
+    my $search = "var $element_name = document.querySelector('$locator');";
 
     return $search;
 }
@@ -39,9 +40,7 @@ sub prepare_element {
 =cut
 
 sub prepare_elements {
-    my ($self, $element_name) = @_;
-
-    $element_name //= 'element';
+    my ($self) = @_;
 
     my $locator = $self->resolved_locator;
 
