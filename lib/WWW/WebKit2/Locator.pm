@@ -145,7 +145,7 @@ sub get_property {
 sub get_offset_width {
     my ($self) = @_;
 
-    return decode_json $self->property_search('offsetWidth');
+    return $self->property_search('offsetWidth');
 }
 
 =head2 get_offset_height
@@ -155,7 +155,7 @@ sub get_offset_width {
 sub get_offset_height {
     my ($self) = @_;
 
-    return decode_json $self->property_search('offsetHeight');
+    return $self->property_search('offsetHeight');
 }
 
 =head2 get_checked
@@ -197,7 +197,7 @@ sub get_length {
 
     my $search = $self->prepare_elements_search('length');
 
-    return decode_json $self->inspector->run_javascript($search);
+    return $self->inspector->run_javascript($search);
 }
 
 =head2 scroll_into_view
@@ -237,7 +237,7 @@ sub get_screen_position {
 sub focus {
     my ($self) = @_;
 
-    return decode_json $self->property_search('focus()');
+    return $self->property_search('focus()');
 }
 
 =head2 submit
@@ -301,7 +301,7 @@ sub is_visible {
         isVisible(element)
     ";
 
-    return decode_json $self->inspector->run_javascript($search);
+    return $self->inspector->run_javascript($search);
 }
 
 =head2 resolve_locator
