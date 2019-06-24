@@ -16,7 +16,7 @@ sub run_javascript {
     $self->view->run_javascript($javascript_string, undef, sub {
         my ($object, $result, $user_data) = @_;
         $done = 1;
-        $js_result = $self->get_json_from_javascript_result($result);
+        $js_result = $self->get_javascript_result($result);
     }, undef);
 
     Gtk3::main_iteration while Gtk3::events_pending or not $done;
@@ -24,7 +24,7 @@ sub run_javascript {
     return $js_result;
 }
 
-sub get_json_from_javascript_result {
+sub get_javascript_result {
     my ($self, $result) = @_;
 
     my $value = $self->view->run_javascript_finish($result);
@@ -35,9 +35,8 @@ sub get_json_from_javascript_result {
     return $js_value->to_string if $js_value->is_string;
 
     my $json = JSON->new;
-    $json = encode_json($js_value->to_string);
 
-    return $json;
+    return $js_value->to_string;
 }
 
 =head3 resolve_locator
@@ -113,14 +112,8 @@ sub get_text {
 
 sub eval_js {
     my ($self, $javascript_string) = @_;
-    my $evaluated = $self->run_javascript($javascript_string);
 
-    my $decoded_json = eval { decode_json($evaluated) };
-    if ($@) {
-        return $evaluated;
-    }
-
-    return $decoded_json;
+    return $self->run_javascript($javascript_string);
 }
 
 =head3 get_xpath_count
