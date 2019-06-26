@@ -270,7 +270,9 @@ sub fire_event {
         element.dispatchEvent(event);
     ';
 
-    return $self->inspector->run_javascript($fire_event)
+    my $result = $self->inspector->run_javascript($fire_event);
+    $self->inspector->pause(100);
+    return $result;
 }
 
 =head2 is_visible
