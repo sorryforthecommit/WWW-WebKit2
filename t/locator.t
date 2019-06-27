@@ -24,8 +24,8 @@ elsif ($@) {
 $webkit->open("$Bin/test/locator.html");
 ok(1, 'opened');
 
-my $xpath_length = $webkit->resolve_locator("xpath=//option")->get_length;
-is($xpath_length, "2", "got correct length with xpath");
+my $xpath_length = $webkit->resolve_locator("xpath=//option[1]")->get_length;
+is($xpath_length, "1", "got correct length with xpath");
 
 my $option = $webkit->resolve_locator("label=Testoption")->get_tag_name;
 is($option, "OPTION", "label resolved");

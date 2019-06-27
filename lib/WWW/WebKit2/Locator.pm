@@ -354,6 +354,11 @@ my $get_elements_function = q{
         let results = [];
         let query = document.evaluate(xpath, parent || document,
             null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+        if (query.snapshotLength > 1) {
+            throw('xpath returned more than 1 result: ' + xpath);
+        }
+
         for (let i = 0, length = query.snapshotLength; i < length; ++i) {
             results.push(query.snapshotItem(i));
         }
