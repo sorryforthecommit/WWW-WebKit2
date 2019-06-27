@@ -1,6 +1,7 @@
 package WWW::WebKit2::Locator;
 
 use common::sense;
+use Carp qw(croak);
 use JSON qw(decode_json encode_json);
 use Moose;
 
@@ -193,7 +194,7 @@ sub set_value {
 =cut
 
 sub get_length {
-    my ($self, $attribute) = @_;
+    my ($self) = @_;
 
     my $search = $self->prepare_elements_search('length');
 
@@ -384,8 +385,12 @@ sub prepare_element {
         $get_elements_function
         $parent
         var $element_name = getElementsByXPath('$locator'$parent_param);
-        $element_name = $element_name" . "[0];
     ";
+
+    my $count = $self->inspector->run_javascript($search . "$element_name.length;");
+    croak "xpath: $locator gave $count results" if $count != 1;
+
+    $search .= "$element_name = $element_name" . "[0];";
 
     return $search;
 }

@@ -1,6 +1,7 @@
 package WWW::WebKit2::LocatorCSS;
 
 use common::sense;
+use Carp qw(croak);
 use Moose;
 use base 'WWW::WebKit2::Locator';
 
@@ -30,9 +31,11 @@ sub prepare_element {
 
     my $locator = $self->resolved_locator;
 
-    my $search = "var $element_name = document.querySelector('$locator');";
+    my $count = $self->inspector->run_javascript($self->prepare_elements_search('length'));
+    croak "css: $locator gave $count results" if $count != 1;
 
-    return $search;
+    return $self->prepare_elements .
+        "$element_name = elements[0];";
 }
 
 =head2 prepare_elements
