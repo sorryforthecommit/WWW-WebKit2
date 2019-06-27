@@ -30,7 +30,14 @@ sub prepare_element {
 
     my $locator = $self->resolved_locator;
 
-    my $search = "var $element_name = document.querySelector('$locator');";
+    my $search = "var $element_name = document.querySelectorAll('$locator');
+        if ($element_name.length > 1) {
+            throw('css returned more than 1 result: $locator');
+        }
+        else {
+            $element_name = $element_name\[0];
+        }
+    ";
 
     return $search;
 }

@@ -98,7 +98,7 @@ is($webkit->get_confirmation, 'Confirm?', 'confirmation popped up');
 $webkit->run_javascript('alert("Alert!")');
 is($webkit->get_alert, 'Alert!', 'alert popped up');
 
-$webkit->enable_write_console_messages_to_stdout;
+$webkit->enable_console_log;
 $webkit->open("$Bin/test/console_error.html");
 $webkit->run_javascript('console.log("console log stdout test")');
 

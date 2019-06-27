@@ -188,12 +188,22 @@ sub set_value {
     return $self->property_search('value = "' . $value . '";');
 }
 
+=head2 is_unique
+
+=cut
+
+sub is_unique {
+    my ($self) = @_;
+
+    return defined $self->property_search('length');
+}
+
 =head2 get_length
 
 =cut
 
 sub get_length {
-    my ($self, $attribute) = @_;
+    my ($self) = @_;
 
     my $search = $self->prepare_elements_search('length');
 

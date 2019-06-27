@@ -17,11 +17,11 @@ sub enable_file_access_from_file_urls {
     return $self->save_settings($settings);
 }
 
-=head3 enable_write_console_messages_to_stdout
+=head3 enable_console_log
 
 =cut
 
-sub enable_write_console_messages_to_stdout {
+sub enable_console_log {
     my ($self) = @_;
 
     my $settings = $self->settings;

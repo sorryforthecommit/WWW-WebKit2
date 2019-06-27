@@ -326,6 +326,7 @@ sub init_webkit {
     });
 
     $self->enable_file_access_from_file_urls;
+    $self->enable_console_log;
 
     $self->window->show_all;
     $self->process_events;
