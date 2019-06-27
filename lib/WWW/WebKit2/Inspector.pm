@@ -194,7 +194,7 @@ sub get_center_screen_position {
 sub is_element_present {
     my ($self, $locator) = @_;
 
-    return $self->resolve_locator($locator)->get_length > 0;
+    return $self->resolve_locator($locator)->get_length == 1;
 }
 
 =head3 is_visible($locator)

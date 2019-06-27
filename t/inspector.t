@@ -66,6 +66,7 @@ ok($webkit->is_element_present('css=#content'), 'css content is present');
 ok($webkit->is_element_present('xpath=//div[@id="content"]'), 'xpath content is present');
 ok(not($webkit->is_element_present('css=#foobar')), '#foobar is not present');
 ok(not($webkit->is_element_present('xpath=//div[@id="foobar"]')), 'xpath #foobar is not present');
+ok((not $webkit->is_element_present('css=*')), 'fail on multiple matches');
 
 ok($webkit->is_ordered('css=head', 'css=body'), 'head > body order correct');
 ok($webkit->is_ordered('css=#content', 'css=form'), 'order correct');
