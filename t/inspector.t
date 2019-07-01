@@ -66,7 +66,7 @@ ok($webkit->is_element_present('css=#content'), 'css content is present');
 ok($webkit->is_element_present('xpath=//div[@id="content"]'), 'xpath content is present');
 ok(not($webkit->is_element_present('css=#foobar')), '#foobar is not present');
 ok(not($webkit->is_element_present('xpath=//div[@id="foobar"]')), 'xpath #foobar is not present');
-ok((not $webkit->is_element_present('css=*')), 'fail on multiple matches');
+ok((not $webkit->is_element_present('css=input')), 'fail on multiple matches');
 
 ok($webkit->is_ordered('css=head', 'css=body'), 'head > body order correct');
 ok($webkit->is_ordered('css=#content', 'css=form'), 'order correct');
@@ -98,7 +98,6 @@ is($webkit->get_confirmation, 'Confirm?', 'confirmation popped up');
 $webkit->run_javascript('alert("Alert!")');
 is($webkit->get_alert, 'Alert!', 'alert popped up');
 
-$webkit->enable_console_log;
 $webkit->open("$Bin/test/console_error.html");
 $webkit->run_javascript('console.log("console log stdout test")');
 

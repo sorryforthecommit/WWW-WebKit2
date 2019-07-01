@@ -30,11 +30,7 @@ sub get_javascript_result {
     my $value = $self->view->run_javascript_finish($result);
     my $js_value = $value->get_js_value;
 
-    return undef if $js_value->is_null;
-
-    return $js_value->to_string if $js_value->is_string;
-
-    my $json = JSON->new;
+    return undef if ($js_value->is_null or $js_value->is_undefined);
 
     return $js_value->to_string;
 }
@@ -194,7 +190,9 @@ sub get_center_screen_position {
 sub is_element_present {
     my ($self, $locator) = @_;
 
-    return $self->resolve_locator($locator)->is_unique;
+    my $result = eval { $self->resolve_locator($locator)->is_unique; };
+
+    return $result;
 }
 
 =head3 is_visible($locator)

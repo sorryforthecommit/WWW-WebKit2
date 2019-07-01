@@ -195,7 +195,11 @@ sub set_value {
 sub is_unique {
     my ($self) = @_;
 
-    return defined $self->property_search('length');
+    my $function = "function x() { " . $self->prepare_element . " return element; } " .
+        "var element = x();
+        element === undefined ? 0 : 1";
+
+    return $self->inspector->run_javascript($function);
 }
 
 =head2 get_length
