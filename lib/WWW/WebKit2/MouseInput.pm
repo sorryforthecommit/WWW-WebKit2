@@ -33,6 +33,10 @@ sub select {
 
     $self->process_page_load;
 
+    $self->wait_for_condition(sub {
+       return $select->get_value eq $option_value;
+    });
+
     return 1;
 }
 
