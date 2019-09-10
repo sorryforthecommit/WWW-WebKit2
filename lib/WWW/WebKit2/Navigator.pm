@@ -18,6 +18,7 @@ sub open {
     }
 
     $self->process_page_load;
+    Gtk3::main_iteration_do(0);
 }
 
 =head3 refresh()

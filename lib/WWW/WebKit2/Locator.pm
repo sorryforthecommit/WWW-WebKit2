@@ -32,6 +32,34 @@ has 'resolved_locator' => (
     }
 );
 
+=head2 is_visible_function
+
+Taken from jQuery's codebase.
+https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
+
+=cut
+
+has 'is_visible_function' => (
+    is       => 'ro',
+    isa      => 'Str',
+    default  =>  sub {
+        return qq{
+            function isVisible(e) {
+                if (e == undefined) {
+                    return 0;
+                }
+
+                if(getComputedStyle(e).visibility === 'hidden') {
+                    return 0;
+                }
+
+                var visible = !!( e.offsetWidth || e.offsetHeight || e.getClientRects().length );
+                return visible ? 1 : 0;
+            };
+        };
+    },
+);
+
 =head2 get_text
 
 =cut
@@ -267,19 +295,29 @@ sub fire_event {
     my ($self, $event_type) = @_;
 
     my $fire_event = $self->prepare_element . '
-        var event = new Event("' . $event_type . '");
+        window.event_fired = "initialized";
+        element.addEventListener("' . $event_type . '", function(e) {
+           window.event_fired = "fired";
+        });
+        var event = new Event("' . $event_type . '", { "bubbles": true, "cancelable": true });
         element.dispatchEvent(event);
     ';
 
     my $result = $self->inspector->run_javascript($fire_event);
-    $self->inspector->pause(100);
+    $self->inspector->wait_for_condition(sub {
+        my $event_fired = $self->inspector->run_javascript("window.event_fired");
+        # event_fired will be undef if the event triggered a page load
+        return 1 if (not defined $event_fired or $event_fired eq "fired");
+        return 0;
+    });
+
+    # we need another run_javascript after firing an event, but we don't 100% know why
+    $self->inspector->resolve_locator('//body')->get_inner_html;
+
     return $result;
 }
 
 =head2 is_visible
-
-Taken from jQuery's codebase.
-https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
 
 =cut
 
@@ -288,19 +326,10 @@ sub is_visible {
 
     my $search = $self->prepare_element;
 
+    my $is_visible_function = $self->is_visible_function;
+
     $search .= "
-        function isVisible(e) {
-            if (e == undefined) {
-                return 0;
-            }
-
-            if(getComputedStyle(e).visibility === 'hidden') {
-                return 0;
-            }
-
-            var visible = !!( e.offsetWidth || e.offsetHeight || e.getClientRects().length );
-            return visible ? 1 : 0;
-        }
+        $is_visible_function
         isVisible(element)
     ";
 
