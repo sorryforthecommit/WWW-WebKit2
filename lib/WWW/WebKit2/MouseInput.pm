@@ -88,7 +88,7 @@ sub click {
 
     if ($tag eq 'input' and ($type eq 'checkbox' or $type eq 'radio')) {
         $element->property_search('click()');
-        $element->fire_event('click');
+        $element->fire_event('change');
     }
     elsif (($tag eq 'input' and ($type eq 'submit' or $type eq 'image'))
         or $tag eq 'submit'
