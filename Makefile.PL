@@ -34,6 +34,7 @@ WriteMakefile(
     BUILD_REQUIRES => {
         'URI' => 0,
         'Test::More' => 0.88,
+        'Test::Fake::HTTPD' => 0,
     },
     PREREQ_PM         => {
         'Gtk3'              => 0,
