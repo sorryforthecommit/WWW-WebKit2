@@ -307,7 +307,7 @@ sub fire_event {
     $self->inspector->wait_for_condition(sub {
         my $event_fired = $self->inspector->run_javascript("window.event_fired");
         # event_fired will be undef if the event triggered a page load
-        return 1 if (not defined $event_fired or $event_fired eq "fired");
+        return 1 if (not $event_fired or $event_fired eq "fired");
         return 0;
     });
 
