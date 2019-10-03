@@ -303,11 +303,41 @@ sub fire_event {
         element.dispatchEvent(event);
     ';
 
+    return $self->run_event($fire_event, "event_fired");
+}
+
+=head2 fire_mouse_event
+
+=cut
+
+sub fire_mouse_event {
+    my ($self, $event_type) = @_;
+
+    my $fire_event = $self->prepare_element . '
+        window.mouse_event_fired = "initialized";
+        element.addEventListener("' . $event_type . '", function(e) {
+           window.mouse_event_fired = "fired";
+        });
+        var event_settings = { "bubbles": true, "cancelable": true, "view": window };
+        var event = new MouseEvent("' . $event_type . '", event_settings);
+        element.dispatchEvent(event);
+    ';
+
+    return $self->run_event($fire_event, "mouse_event_fired");
+}
+
+=head2 run_event
+
+=cut
+
+sub run_event {
+    my ($self, $fire_event, $event_variable) = @_;
+
     my $result = $self->inspector->run_javascript($fire_event);
     $self->inspector->wait_for_condition(sub {
-        my $event_fired = $self->inspector->run_javascript("window.event_fired");
+        my $event_fired = $self->inspector->run_javascript("window.$event_variable");
         # event_fired will be undef if the event triggered a page load
-        return 1 if (not $event_fired or $event_fired eq "fired");
+        return 1 if (not defined $event_fired or $event_fired eq "fired");
         return 0;
     });
 

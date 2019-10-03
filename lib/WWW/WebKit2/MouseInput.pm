@@ -103,8 +103,8 @@ sub click {
             $self->load_status eq 'started'
         });
     }
-    else{
-        $element->fire_event('click');
+    else {
+        $element->fire_mouse_event('click');
     }
 
 
