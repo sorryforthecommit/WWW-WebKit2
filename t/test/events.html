@@ -30,6 +30,18 @@
                 input.addEventListener('blur', function(e) {
                     alert('blurred');
                 });
+                document.querySelector('#start_ajax').addEventListener('click', function(e) {
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('GET', window.ajax_url);
+                    xhr.send();
+                    xhr.onload = function() {
+                        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+                            window.setTimeout(function() {
+                                document.querySelector('#ajax_result').innerHTML = 'Hello World';
+                            }, 1000);
+                        }
+                    };
+                });
             }
         </script>
     </head>
@@ -41,5 +53,8 @@
                 <input name="focus" value="1" />
             </form>
         </div>
+
+        <button id="start_ajax">Start AJAX</button>
+        <div id="ajax_result"></div>
     </body>
 </html>

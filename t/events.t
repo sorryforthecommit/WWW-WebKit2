@@ -4,8 +4,10 @@ use utf8;
 
 use Test::More;
 use lib 'lib';
+use File::Slurper 'read_text';
 use FindBin qw($Bin $RealBin);
 use lib "$Bin/../../Gtk3-WebKit2/lib";
+use Test::Fake::HTTPD;
 use URI;
 
 use_ok 'WWW::WebKit2';
@@ -41,7 +43,7 @@ ok(
 
 $webkit->eval_js("window.scrollBy(0, 100);");
 ok(
-    $webkit->wait_for_condition(sub{
+    $webkit->wait_for_condition(sub {
         $webkit->eval_js("document.documentElement.scrollTop") == 100
     }, 1000)
 );
@@ -60,5 +62,21 @@ $webkit->fire_event('css=input', 'focus');
 $webkit->wait_for_alert("focused", 100);
 $webkit->fire_event('//input', 'blur');
 $webkit->wait_for_alert("blurred", 100);
+
+my $httpd = Test::Fake::HTTPD->new;
+
+$httpd->run(sub {
+    my $req = shift;
+    return [ 200, [ 'Content-Type', 'text/html' ], [ read_text("$Bin/test/events.html") ] ];
+});
+
+$webkit->enable_console_log;
+$webkit->open($httpd->endpoint);
+$webkit->run_javascript("window.ajax_url='" . $httpd->endpoint . "'");
+$webkit->click('css=button');
+$webkit->wait_for_condition(sub {
+    $webkit->resolve_locator("css=#ajax_result")->get_inner_html eq 'Hello World';
+});
+is($webkit->resolve_locator("css=#ajax_result")->get_inner_html, 'Hello World', 'waited for js');
 
 done_testing;
