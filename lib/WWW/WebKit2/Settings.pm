@@ -41,6 +41,18 @@ sub enable_developer_extras {
     return $self->save_settings($settings);
 }
 
+=head3 enable_hardware_acceleration
+
+=cut
+
+sub enable_hardware_acceleration {
+    my ($self) = @_;
+
+    my $settings = $self->settings;
+    $settings->set_hardware_acceleration_policy("WEBKIT_HARDWARE_ACCELERATION_POLICY_ALWAYS");
+    return $self->save_settings($settings);
+}
+
 =head3 disable_plugins()
 
 Disables WebKit plugins. Use this if you don't need plugins like Java and Flash
