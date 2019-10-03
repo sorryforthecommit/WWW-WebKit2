@@ -330,6 +330,8 @@ sub init_webkit {
     $self->window->show_all;
     $self->process_events;
 
+    $self->enable_developer_extras;
+
     return $self;
 }
 
