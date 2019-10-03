@@ -91,6 +91,7 @@ is($center_position[1], 125, "center screen position y ok");
 
 ok($webkit->disable_plugins, "disabled plugins");
 ok($webkit->enable_plugins, "enabled plugins");
+ok($webkit->enable_hardware_acceleration, "enabled hardware acceleration");
 
 $webkit->run_javascript('window.print()');
 ok($webkit->print_requested, 'print popped up');
