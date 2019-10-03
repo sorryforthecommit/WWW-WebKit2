@@ -8,7 +8,7 @@ use WWW::WebKit2::Locator;
 use WWW::WebKit2::LocatorCSS;
 
 sub run_javascript {
-    my ($self, $javascript_string) = @_;
+    my ($self, $javascript_string, $raw) = @_;
 
     my $done = 0;
     my $js_result = '';
@@ -16,7 +16,7 @@ sub run_javascript {
     $self->view->run_javascript($javascript_string, undef, sub {
         my ($object, $result, $user_data) = @_;
         $done = 1;
-        $js_result = $self->get_javascript_result($result);
+        $js_result = $self->get_javascript_result($result, $raw);
     }, undef);
 
     Gtk3::main_iteration while Gtk3::events_pending or not $done;
@@ -25,12 +25,14 @@ sub run_javascript {
 }
 
 sub get_javascript_result {
-    my ($self, $result) = @_;
+    my ($self, $result, $raw) = @_;
 
     my $value = $self->view->run_javascript_finish($result);
     my $js_value = $value->get_js_value;
 
-    return undef if ($js_value->is_null or $js_value->is_undefined);
+    return $js_value->to_string if $raw;
+
+    return '' if ($js_value->is_null or $js_value->is_undefined or $js_value->to_string eq 'false');
 
     return $js_value->to_string;
 }
@@ -109,7 +111,7 @@ sub get_text {
 sub eval_js {
     my ($self, $javascript_string) = @_;
 
-    return $self->run_javascript($javascript_string);
+    return $self->run_javascript($javascript_string, 'raw');
 }
 
 =head3 get_xpath_count

@@ -33,25 +33,25 @@ is($updated_select_value, 'testtwo', 'Test Two is the new selected value');
 $webkit->select('css=#body .form select[name="dropdown_list"]', 'label=Testone');
 
 my $radio_value = $webkit->resolve_locator('.//input[@id="radiotest_one"]')->property_search('checked');
-is($radio_value, 'false', 'Radio value is currently false');
+ok((not $radio_value), 'Radio value is currently false');
 $webkit->check('.//input[@id="radiotest_one"]');
 $radio_value = $webkit->resolve_locator('.//input[@id="radiotest_one"]')->property_search('checked');
-is($radio_value, 'true', 'Radio is set to true');
+ok($radio_value, 'Radio is set to true');
 
 $webkit->uncheck('.//input[@id="radiotest_one"]');
 $radio_value = $webkit->resolve_locator('.//input[@id="radiotest_one"]')->property_search('checked');
-is($radio_value, 'false', 'Radio is now set to false');
+ok((not $radio_value), 'Radio is now set to false');
 
 # checkboxes with click
 my $checkbox_value = $webkit->resolve_locator('.//input[@id="checkboxtest"]')->property_search('checked');
-is($checkbox_value, 'false', 'Radio value is currently false');
+ok((not $checkbox_value), 'Radio value is currently false');
 $webkit->click('.//input[@id="checkboxtest"]');
 $checkbox_value = $webkit->resolve_locator('.//input[@id="checkboxtest"]')->property_search('checked');
-is($checkbox_value, 'true', 'checkbox is set to true');
+ok($checkbox_value, 'checkbox is set to true');
 
 $webkit->click('.//input[@id="checkboxtest"]');
 $checkbox_value = $webkit->resolve_locator('.//input[@id="checkboxtest"]')->property_search('checked');
-is($checkbox_value, 'false', 'checkbox is now set to false');
+ok((not $checkbox_value), 'checkbox is now set to false');
 
 $webkit->mouse_over('.//li[@id="test_item_one"]');
 my $mouse_over_result = $webkit->resolve_locator('.//li[@id="test_item_new"]');
