@@ -29,6 +29,18 @@ sub enable_console_log {
     return $self->save_settings($settings);
 }
 
+=head3 enable_developer_extras
+
+=cut
+
+sub enable_developer_extras {
+    my ($self) = @_;
+
+    my $settings = $self->settings;
+    $settings->set_enable_developer_extras(TRUE);
+    return $self->save_settings($settings);
+}
+
 =head3 disable_plugins()
 
 Disables WebKit plugins. Use this if you don't need plugins like Java and Flash
