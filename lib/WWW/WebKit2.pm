@@ -375,6 +375,9 @@ sub handle_resource_request {
     $resource->signal_connect('received-data' => sub {
         delete $self->pending_requests->{"$request"};
     });
+    $resource->signal_connect('finished' => sub {
+        delete $self->pending_requests->{"$request"};
+    });
     $resource->signal_connect('failed' => sub {
         # If someone decides not to wait_for_pending_requests, this signal is received
         # during global destruction with $self being undefined.
