@@ -44,7 +44,7 @@ sub get_javascript_result {
 sub resolve_locator {
     my ($self, $locator, $locator_parent) = @_;
 
-    $locator =~ s/'/"/g;
+    $locator =~ s/'/\\'/g;
 
     if (my ($css) = $locator =~ /^css=(.*)/) {
         return WWW::WebKit2::LocatorCSS->new({
