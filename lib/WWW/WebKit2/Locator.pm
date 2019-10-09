@@ -194,7 +194,7 @@ sub get_offset_height {
 sub get_checked {
     my ($self) = @_;
 
-    return $self->get_attribute("checked");
+    return $self->property_search("checked");
 }
 
 =head2 get_value

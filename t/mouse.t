@@ -74,4 +74,8 @@ is($webkit->get_alert, 'Found me!', 'Found element to click on after scrolling')
 $webkit->click('id=invisible_1');
 is($webkit->get_alert, 'Found invisible!', 'Clicked invisible element');
 
+# test Javascript checks
+ok($webkit->resolve_locator('id=checkbox_js_check')->get_checked, 'detected js check');
+is($webkit->get_value('id=checkbox_js_check'), 'on');
+
 done_testing;
