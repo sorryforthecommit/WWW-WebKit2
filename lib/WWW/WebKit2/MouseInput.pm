@@ -84,9 +84,6 @@ sub click {
 
     die "Element doesn't exist: " . $locator unless $element->get_length;
 
-    $element->property_search('style.border ="2px solid red"');
-    $element->property_search('style.background ="green"');
-
     my $tag  = lc $element->get_node_name;
     my $type = lc ($element->get_attribute('type') // '');
 
