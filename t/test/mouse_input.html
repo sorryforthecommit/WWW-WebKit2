@@ -66,8 +66,11 @@
         <input type="radio" id="radiotest_two" value="radiotest_two" name="radiotest">
         <label for="radiotest_two">Radio Test Two</label>
         <br>
-        <input type="checkbox" id="checkboxtest" value="checkboxtest" name="checboxtest">
+        <input type="checkbox" id="checkboxtest" value="checkboxtest" name="checkboxtest">
         <label for="checkboxtest">Checkbox Test One</label>
+        <br>
+        <input type="checkbox" id="checkbox_js_check" value="checkbox_js_check" name="checkbox_js_check">
+        <label for="checkbox_js_check">Checkbox Javascript Check</label>
     </form>
     <ul id="test_list">
         <li id="test_item_one">Coffee</li>
@@ -101,5 +104,7 @@
             document.getElementById("test_list").appendChild(test_item_new);
 
         });
+
+        document.getElementById('checkbox_js_check').checked = true;
     </script>
 </html>
