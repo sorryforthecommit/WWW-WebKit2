@@ -188,6 +188,8 @@ sub fire_mouse_event {
         element.dispatchEvent(clickEvent);
     ";
     $self->run_javascript($mouse_up_script);
+
+    return 1;
 }
 
 sub move_mouse_abs {
