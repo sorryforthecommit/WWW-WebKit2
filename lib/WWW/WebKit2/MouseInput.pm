@@ -179,6 +179,21 @@ sub mouse_up {
     return $self->fire_mouse_event($mouse_up, 'mouseup');
 }
 
+=head2 double_click
+
+=cut
+
+sub double_click {
+    my ($self, $locator) = @_;
+
+    my $element = $self->resolve_locator($locator);
+
+    $self->fire_mouse_event(
+        $element,
+        'dblclick'
+    );
+}
+
 sub fire_mouse_event {
     my ($self, $element, $event) = @_;
 
