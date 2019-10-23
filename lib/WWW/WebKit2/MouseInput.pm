@@ -29,13 +29,13 @@ sub select {
 
     $self->run_javascript($set_select);
 
+    $self->wait_for_condition(sub {
+        return $select->get_value eq $option_value;
+    });
+
     $select->fire_event('change');
 
     $self->process_page_load;
-
-    $self->wait_for_condition(sub {
-       return $select->get_value eq $option_value;
-    });
 
     return 1;
 }
