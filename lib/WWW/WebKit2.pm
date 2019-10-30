@@ -91,6 +91,16 @@ has scrolled_view => (
     }
 );
 
+has username => (
+    is      => 'rw',
+    isa     => 'Str',
+);
+
+has password => (
+    is      => 'rw',
+    isa     => 'Str',
+);
+
 has window_width => (
     is      => 'ro',
     isa     => 'Int',
@@ -310,6 +320,22 @@ sub init_webkit {
         }
 
         return TRUE;
+    });
+
+    $self->view->signal_connect('authenticate' => sub {
+        my ($request) = $_[1];
+
+        # enums
+        # none / WEBKIT_CREDENTIAL_PERSISTENCE_NONE, for-session / WEBKIT_CREDENTIAL_PERSISTENCE_FOR_SESSION, permanent / WEBKIT_CREDENTIAL_PERSISTENCE_PERMANENT
+        my $password = $self->password;
+        my $username = $self->username;
+        my $credential = Gtk3::WebKit2::Credential->new($username, $password, 'WEBKIT_CREDENTIAL_PERSISTENCE_NONE');
+        p $credential->has_password;
+        p $request->get_proposed_credential;
+        $request->authenticate($credential);
+
+        warn 'here';
+       #$request->credential_new('jason', 'carty');
     });
 
     $self->view->signal_connect('print' => sub {
