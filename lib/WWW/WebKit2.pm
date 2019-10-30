@@ -31,6 +31,7 @@ None by default.
 use 5.10.0;
 use Moose;
 
+with 'WWW::WebKit2::Cookies';
 with 'WWW::WebKit2::MouseInput';
 with 'WWW::WebKit2::KeyboardInput';
 with 'WWW::WebKit2::Events';

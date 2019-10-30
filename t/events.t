@@ -79,4 +79,8 @@ $webkit->wait_for_condition(sub {
 });
 is($webkit->resolve_locator("css=#ajax_result")->get_inner_html, 'Hello World', 'waited for js');
 
+is($webkit->run_javascript('document.cookie'), 'foo=bar', 'cookie set');
+$webkit->clear_cookies;
+is($webkit->run_javascript('document.cookie'), '', 'cookies cleared');
+
 done_testing;
