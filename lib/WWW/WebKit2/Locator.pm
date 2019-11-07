@@ -187,6 +187,26 @@ sub get_offset_height {
     return $self->property_search('offsetHeight');
 }
 
+=head2 get_offset_top
+
+=cut
+
+sub get_offset_top {
+    my ($self) = @_;
+
+    return $self->property_search('offsetTop');
+}
+
+=head2 get_offset_left
+
+=cut
+
+sub get_offset_left {
+    my ($self) = @_;
+
+    return $self->property_search('offsetLeft');
+}
+
 =head2 get_checked
 
 =cut
@@ -247,13 +267,19 @@ sub get_screen_position {
     my ($self) = @_;
 
     my $search = $self->prepare_element .
-        'var boundingrect = element.getBoundingClientRect();
-         var element_top = boundingrect.top;
-         var element_left = boundingrect.left;
-         var win_left = window.screenLeft ? window.screenLeft : window.screenX;
-         var win_top = window.screenTop ? window.screenTop : window.screenY;
-         var result = { "y": element_top + win_top, "x": element_left + win_left };
-         JSON.stringify(result)';
+        'var offset_parent = element;
+        var root_element = document.body;
+        var x = 0;
+        var y = 0;
+        while (offset_parent && offset_parent != root_element && offset_parent.nodeType) {
+            x += offset_parent.offsetLeft || 0;
+            y += offset_parent.offsetTop || 0;
+            offset_parent = offset_parent.offsetParent;
+        }
+        var win_left = window.screenLeft ? window.screenLeft : window.screenX;
+        var win_top = window.screenTop ? window.screenTop : window.screenY;
+        var result = { "y": win_top + y, "x": win_left + x };
+        JSON.stringify(result)';
 
     my $result = decode_json $self->inspector->run_javascript($search);
     return ($result->{x}, $result->{y});
