@@ -28,6 +28,10 @@ is($webkit->get_value('//input'), "1", "input value is 1");
 $webkit->type('//input', $text);
 is($webkit->get_value('//input'), $text, "input value is $text");
 
+# make sure type can deal with line breaks, though get_value does not preserve them
+$webkit->type('//input', "line1\nline2");
+is($webkit->get_value('//input'), "line1 line2", "input value is correct");
+
 $webkit->resolve_locator('//input')->set_value('');
 $webkit->type_keys('//input', '1,5 Bar');
 $webkit->wait_for_condition(sub {
