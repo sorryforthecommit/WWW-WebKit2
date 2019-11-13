@@ -10,6 +10,10 @@ use File::Slurper 'read_text';
 sub open {
     my ($self, $url) = @_;
 
+    # make sure previous page, if existing, has finished all its work and there are no
+    # ajax requests or the like stuck in the pipeline
+    $self->process_page_load;
+
     if ($url =~ /^http[s]?:/ or $url =~ /^file:/) {
         $self->view->load_uri($url);
     }
@@ -18,7 +22,6 @@ sub open {
     }
 
     $self->process_page_load;
-    Gtk3::main_iteration_do(0);
 }
 
 =head3 refresh()

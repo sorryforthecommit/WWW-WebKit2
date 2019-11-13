@@ -97,9 +97,9 @@ sub click {
         $element->property_search('click()');
         $self->wait_for_condition(sub {
             $self->load_status eq 'started'
-        });
+        }, 100);
     }
-    else{
+    else {
         $element->fire_event('click');
     }
 
