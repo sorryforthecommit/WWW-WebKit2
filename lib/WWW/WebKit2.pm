@@ -429,23 +429,13 @@ sub setup_xvfb {
 sub uninit {
     my ($self) = @_;
 
-    if ($self->has_view) {
-        $self->scrolled_view->remove($self->view) if $self->has_scrolled_view and $self->scrolled_view and $self->view;
-        $self->view->destroy if $self->view;
-        $self->clear_view;
-    }
-
-    if ($self->has_scrolled_view) {
-        $self->window->remove($self->scrolled_view) if $self->has_window and $self->window and $self->scrolled_view;
-        $self->scrolled_view->destroy if $self->scrolled_view;
-        $self->clear_scrolled_view;
-    }
-
     if ($self->has_window) {
         $self->window->destroy if $self->window;
         $self->clear_window;
     }
 
+    $self->clear_view;
+    $self->clear_scrolled_view;
     $self->clear_display;
 }
 
