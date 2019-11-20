@@ -285,6 +285,21 @@ sub get_screen_position {
     return ($result->{x}, $result->{y});
 }
 
+=head2 get_center_screen_position
+
+=cut
+
+sub get_center_screen_position {
+    my ($self) = @_;
+
+    my ($x, $y) = $self->get_screen_position;
+
+    $x += $self->get_offset_width / 2;
+    $y += $self->get_offset_height / 2;
+
+    return ($x, $y);
+}
+
 =head2 focus
 
 =cut

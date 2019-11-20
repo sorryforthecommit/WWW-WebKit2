@@ -81,32 +81,7 @@ sub click {
     my ($self, $locator) = @_;
 
     my $element = $self->resolve_locator($locator);
-
-    die "Element doesn't exist: " . $locator unless $element->get_length;
-
-    my $tag  = lc $element->get_node_name;
-    my $type = lc ($element->get_attribute('type') // '');
-
-    if ($tag eq 'input' and ($type eq 'checkbox' or $type eq 'radio')) {
-        $element->property_search('click()');
-    }
-    elsif (($tag eq 'input' and ($type eq 'submit' or $type eq 'image'))
-        or $tag eq 'submit'
-        or ($tag eq 'button' and $type eq 'submit')) {
-
-        $element->property_search('click()');
-        $self->wait_for_condition(sub {
-            $self->load_status eq 'started'
-        }, 100);
-    }
-    else {
-        $element->fire_event('click');
-    }
-
-
-    $self->process_page_load;
-
-    return 1;
+    return $self->fire_mouse_event($element, 'click');
 }
 
 sub left_click {
@@ -197,12 +172,28 @@ sub double_click {
 sub fire_mouse_event {
     my ($self, $element, $event) = @_;
 
+    my ($x, $y) = $element->get_center_screen_position;
+
     my $mouse_up_script = $element->prepare_element .
-        " var clickEvent = document.createEvent('MouseEvents');
-        clickEvent.initMouseEvent ('$event', true, true);
-        element.dispatchEvent(clickEvent);
+        "var event = new MouseEvent('$event', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: $x,
+            clientY: $y,
+            screenX: $x,
+            screenY: $y,
+            ctrlKey: " . ($self->modifiers->{control} ? 'true' : 'false') . ",
+            altKey: false,
+            shiftKey: false,
+            metaKey: false,
+            button: 0,
+            relatedTarget: element,
+        });
+        element.dispatchEvent(event);
     ";
     $self->run_javascript($mouse_up_script);
+    $self->process_page_load;
 
     return 1;
 }
