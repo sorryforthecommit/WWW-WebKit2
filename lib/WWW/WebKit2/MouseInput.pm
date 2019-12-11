@@ -197,11 +197,27 @@ sub double_click {
 sub fire_mouse_event {
     my ($self, $element, $event) = @_;
 
+    my $ctrl_down  = $self->modifiers->{control} ? 'true' : 'false';
+    my $shift_down = $self->modifiers->{shift}   ? 'true' : 'false';
+
     my $mouse_up_script = $element->prepare_element .
         " var clickEvent = document.createEvent('MouseEvents');
-        clickEvent.initMouseEvent ('$event', true, true);
-        element.dispatchEvent(clickEvent);
-    ";
+        clickEvent.initMouseEvent(
+            '$event',
+            true,
+            true,
+            window,
+            0,
+            0,
+            0,
+            0,
+            0,
+            $ctrl_down,
+            $shift_down
+        );
+
+        element.dispatchEvent(clickEvent);";
+
     $self->run_javascript($mouse_up_script);
 
     return 1;
