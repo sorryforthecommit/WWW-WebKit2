@@ -234,6 +234,7 @@ sub get_value {
 sub set_value {
     my ($self, $value) = @_;
 
+    $value =~ s/"/\\"/g; # sanitize input
     return $self->property_search('value = "' . $value . '";');
 }
 

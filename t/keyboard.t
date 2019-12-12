@@ -32,6 +32,9 @@ is($webkit->get_value('//input'), $text, "input value is $text");
 $webkit->type('//input', "line1\nline2");
 is($webkit->get_value('//input'), "line1 line2", "input value is correct");
 
+$webkit->type('//input', 'this is a "test"');
+is($webkit->get_value('//input'), 'this is a "test"', 'can type "');
+
 $webkit->resolve_locator('//input')->set_value('');
 $webkit->type_keys('//input', '1,5 Bar');
 $webkit->wait_for_condition(sub {
