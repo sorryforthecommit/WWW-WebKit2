@@ -327,6 +327,7 @@ sub init_webkit {
     });
 
     $self->enable_file_access_from_file_urls;
+    $self->enable_hardware_acceleration;
 
     $self->window->show_all;
     $self->process_events;
