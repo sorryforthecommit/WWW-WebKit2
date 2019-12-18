@@ -25,6 +25,12 @@ elsif ($@) {
 $webkit->open("$Bin/test/locator.html");
 ok(1, 'opened');
 
+# test function object return for run_javascript_finish
+$webkit->eval_js(<<"JS");
+   var foo = function() {};
+   foo.bar = function() {};
+JS
+
 my $js = $webkit->run_javascript('document.title');
 is($js, 'test', 'document.title is test');
 
