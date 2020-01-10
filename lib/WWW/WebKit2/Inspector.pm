@@ -27,7 +27,17 @@ sub run_javascript {
 sub get_javascript_result {
     my ($self, $result, $raw) = @_;
 
-    my $value = $self->view->run_javascript_finish($result);
+    my $value;
+
+    # run_javascript_finish cannot deal with certain "return results", i.e function declarations
+    eval {
+        $value = $self->view->run_javascript_finish($result);
+    };
+    if ($@) {
+        die "Unexpected return value! "
+            . "Hint: One cause is a function assignment to a js-object (foo.bar = function...)";
+    }
+
     my $js_value = $value->get_js_value;
 
     return $js_value->to_string if $raw;
