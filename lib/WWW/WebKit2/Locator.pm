@@ -444,8 +444,7 @@ sub prepare_element {
     ";
 
     my $count = $self->inspector->run_javascript($search . "$element_name.length;");
-    croak "xpath: $locator gave " . ($count // 'undefined') .'results'
-        unless (defined $count and $count == 1);
+    croak "xpath: $locator gave $count results" if $count != 1;
 
     $search .= "$element_name = $element_name" . "[0];";
 
