@@ -306,7 +306,8 @@ sub init_webkit {
         }
 
         if ($type eq 'prompt') {
-            $dialog->prompt_set_text(pop @{ $self->prompt_answers });
+            my $answer = pop @{ $self->prompt_answers };
+            $dialog->prompt_set_text($answer // '');
         }
 
         return TRUE;
