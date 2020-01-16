@@ -321,25 +321,28 @@ sub submit {
 sub fire_event {
     my ($self, $event_type) = @_;
 
+    my $rand = int(rand(100000));
     my $fire_event = $self->prepare_element . '
-        window.event_fired = "initialized";
+        window.event_fired_' . $rand . ' = "initialized";
         element.addEventListener("' . $event_type . '", function(e) {
-           window.event_fired = "fired";
+           window.event_fired_' . $rand . ' = "fired";
         });
         var event = new Event("' . $event_type . '", { "bubbles": true, "cancelable": true });
         element.dispatchEvent(event);
+        1;
     ';
 
     my $result = $self->inspector->run_javascript($fire_event);
     $self->inspector->wait_for_condition(sub {
-        my $event_fired = $self->inspector->run_javascript("window.event_fired");
+        my $event_fired = $self->inspector->run_javascript("window.event_fired_$rand");
         # event_fired will be undef if the event triggered a page load
         return 1 if (not $event_fired or $event_fired eq "fired");
         return 0;
     });
 
+    sleep(0.1);
     # we need another run_javascript after firing an event, but we don't 100% know why
-    $self->inspector->resolve_locator('//body')->get_inner_html;
+    # $self->inspector->resolve_locator('//body')->get_inner_html;
 
     return $result;
 }
