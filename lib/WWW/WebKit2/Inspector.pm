@@ -288,4 +288,12 @@ sub get_alert {
     return pop @{ $self->alerts };
 }
 
+sub unfocus {
+    my ($self) = @_;
+    # TODO: dependent on window position and may fail in various configurations
+    # But it also should only be need in various very special scenarios
+    $self->move_mouse_abs(0,0);
+    $self->left_click;
+}
+
 1;
