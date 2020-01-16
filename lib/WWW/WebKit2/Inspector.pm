@@ -16,7 +16,7 @@ sub run_javascript {
     $self->view->run_javascript($javascript_string, undef, sub {
         my ($object, $result, $user_data) = @_;
         $done = 1;
-        $js_result = $self->get_javascript_result($result, $raw);
+        $js_result = $self->get_javascript_result($result, $raw, $javascript_string);
     }, undef);
 
     Gtk3::main_iteration while Gtk3::events_pending or not $done;
@@ -25,7 +25,7 @@ sub run_javascript {
 }
 
 sub get_javascript_result {
-    my ($self, $result, $raw) = @_;
+    my ($self, $result, $raw, $js) = @_;
 
     my $value;
 
@@ -35,7 +35,9 @@ sub get_javascript_result {
     };
     if ($@) {
         die "Unexpected return value! "
-            . "Hint: One cause is a function assignment to a js-object (foo.bar = function...)";
+            . "Hint: One cause is a function assignment to a js-object (foo.bar = function...)"
+            . "\nFailing call was: $js"
+            . "\nSpecific error was: $@";
     }
 
     my $js_value = $value->get_js_value;
