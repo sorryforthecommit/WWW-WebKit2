@@ -11,7 +11,7 @@ sub type {
     my ($self, $locator, $text) = @_;
 
     # javascript can not deal with regular linebreaks
-    $text =~ s/\n/ \\\n/g;
+    $text =~ s/\n/ \\n/g;
     $self->resolve_locator($locator)->set_value($text);
 
     $self->process_page_load;
