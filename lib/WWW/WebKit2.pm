@@ -375,9 +375,6 @@ sub handle_resource_request {
 
     $self->pending_requests->{"$request"}++;
 
-    $resource->signal_connect('received-data' => sub {
-        delete $self->pending_requests->{"$request"};
-    });
     $resource->signal_connect('finished' => sub {
         delete $self->pending_requests->{"$request"};
     });
