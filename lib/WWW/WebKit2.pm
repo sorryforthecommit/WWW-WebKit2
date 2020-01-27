@@ -370,21 +370,52 @@ sub handle_form_submission {
     $request->submit;
 }
 
+sub unwobble {
+    my ($self) = @_;
+
+    my $last_html = '';
+
+    my $counter = 0;
+    while (1) {
+        my $current_html = $self->resolve_locator('//html')->get_inner_html;
+        if ($last_html eq $current_html) {
+            $self->pause(050);
+#           warn 'Stable';
+            $counter++;
+            if ($counter > 9) {
+#               warn 'super stable';
+                last;
+            }
+        }
+        else  {
+#           warn 'page unstable';
+            $counter = 0;
+            $last_html = $current_html;
+            $self->pause(100);
+        }
+    }
+    return 1;
+}
+
 sub handle_resource_request {
     my ($self, $view, $resource, $request) = @_;
-
-    $self->pending_requests->{"$request"}++;
+    my $uri = $request->get_uri;
+    $self->pending_requests->{$uri}++;
 
     $resource->signal_connect('received-data' => sub {
-        delete $self->pending_requests->{"$request"};
+            #delete $self->pending_requests->{$request->get_uri};
     });
     $resource->signal_connect('finished' => sub {
-        delete $self->pending_requests->{"$request"};
+
+            $self->unwobble;
+            warn 'finished';
+            delete $self->pending_requests->{$request->get_uri};
     });
     $resource->signal_connect('failed' => sub {
+            warn "failed!" . $request->get_uri;
         # If someone decides not to wait_for_pending_requests, this signal is received
         # during global destruction with $self being undefined.
-        delete $self->pending_requests->{"$request"} if defined $self;
+        delete $self->pending_requests->{$request->get_uri} if defined $self;
     });
 }
 
