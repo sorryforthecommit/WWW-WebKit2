@@ -473,11 +473,13 @@ https://github.com/jscarty/WWW-WebKit2
 
 =head1 AUTHOR
 
-Stefan Seifert, E<lt>nine@cpan.orgE<gt>
+Jason Shaun Carty <jc@atikon.com>,
+Philipp Voglhofer <pv@atikon.com>,$
+Philipp A. Lehner <pl@atikon.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2011 by Stefan Seifert
+Copyright (C) 2020 by Jason Shaun Carty, Philipp Voglhofer and Philipp A. Lehner
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.12.3 or,
