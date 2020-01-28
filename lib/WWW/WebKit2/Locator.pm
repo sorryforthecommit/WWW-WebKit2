@@ -83,6 +83,17 @@ sub get_inner_html {
     return $self->property_search('innerHTML');
 }
 
+=head2 set_inner_text
+
+=cut
+
+sub set_inner_text {
+    my ($self, $value) = @_;
+
+    return $self->property_search('innerText = "' . $value . '";');
+
+}
+
 =head2 set_inner_html
 
 =cut

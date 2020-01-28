@@ -83,4 +83,8 @@ is($webkit->resolve_locator("css=.positioned")->get_offset_height, 50, "offset h
 ok ($webkit->resolve_locator("css=body input[name='username']")->get_tag_name);
 ok ($webkit->resolve_locator("//input[\@name='username']")->get_tag_name);
 
+#test set_inner_text
+ok($webkit->resolve_locator("css=.visible")->set_inner_text('perl is amazing'), 'set inner text method returned true');
+is($webkit->resolve_locator("css=.visible")->get_text, 'perl is amazing', 'Set inner text set the text correctly');
+
 done_testing;
