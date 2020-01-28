@@ -292,14 +292,9 @@ sub init_webkit {
         my ($dialog) = $_[1];
         my $message = $dialog->get_message;
         my $type = $dialog->get_dialog_type;
-        if ($type eq 'confirm') {
-            push @{ $self->confirmations }, $message;
 
-            $dialog->confirm_set_confirmed(
-                @{ $self->confirm_answers }
-                    ? pop @{ $self->confirm_answers }
-                    : ($self->accept_confirm ? TRUE : FALSE)
-            );
+        if ($type eq 'confirm') {
+            $self->process_confirmation_prompt($dialog, $message);
         }
         if ($type eq 'alert') {
             push @{ $self->alerts }, $message;
@@ -308,6 +303,9 @@ sub init_webkit {
         if ($type eq 'prompt') {
             my $answer = pop @{ $self->prompt_answers };
             $dialog->prompt_set_text($answer // '');
+        }
+        if ($type eq 'before-unload-confirm') {
+            $self->process_confirmation_prompt($dialog, $message);
         }
 
         return TRUE;
@@ -337,6 +335,24 @@ sub init_webkit {
 
     return $self;
 }
+
+=head2 process_confirmation_prompt
+
+=cut
+
+sub process_confirmation_prompt {
+    my ($self, $dialog, $message) = @_;
+
+    push @{ $self->confirmations }, $message;
+
+    $dialog->confirm_set_confirmed(
+        @{ $self->confirm_answers }
+            ? pop @{ $self->confirm_answers }
+            : ($self->accept_confirm ? TRUE : FALSE)
+    );
+
+}
+
 
 sub pending {
     my ($self) = @_;
