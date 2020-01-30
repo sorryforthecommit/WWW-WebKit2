@@ -73,11 +73,16 @@ $httpd->run(sub {
 $webkit->enable_console_log;
 $webkit->open($httpd->endpoint);
 $webkit->run_javascript("window.ajax_url='" . $httpd->endpoint . "'");
-$webkit->click('css=button');
+$webkit->click('css=button#start_ajax');
 $webkit->wait_for_condition(sub {
     $webkit->resolve_locator("css=#ajax_result")->get_inner_html eq 'Hello World';
 });
 is($webkit->resolve_locator("css=#ajax_result")->get_inner_html, 'Hello World', 'waited for js');
+
+$webkit->prepare_async_page_load;
+$webkit->click('css=button#start_ajax_with_reload');
+$webkit->wait_for_async_page_load;
+ok((not $webkit->run_javascript('window.ajax_url')), 'page has been reloaded');
 
 is($webkit->run_javascript('document.cookie'), 'foo=bar', 'cookie set');
 $webkit->clear_cookies;
