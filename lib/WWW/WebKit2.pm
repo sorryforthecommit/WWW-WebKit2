@@ -270,12 +270,14 @@ sub init_webkit {
     $self->display;
     Gtk3::init;
 
+    # https://developer.gnome.org/gtk3/stable/GtkWidget.html#GtkWidget-event
     $self->view->signal_connect('event' => sub {
         my ($view, $event) = @_;
 
         return 0; # needs to return 0 to propagate event
     });
 
+    # https://developer.gnome.org/gtk3/stable/GtkWidget.html#GtkWidget-event-after
     $self->view->signal_connect('event-after' => sub {
         my ($view, $event) = @_;
 
