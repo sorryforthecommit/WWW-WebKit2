@@ -142,6 +142,45 @@ sub wait_for_alert {
     }, $timeout);
 }
 
+=head2 prepare_async_page_reload
+
+To be used in combination with wait_for_async_page_load.
+Use case: interaction that causes an ajax request that causes a page reload without any
+immediately visible changes.
+
+$self->prepare_async_page_load;
+
+<page interactions>
+
+$self->wait_for_async_page_load;
+
+=cut
+
+sub prepare_async_page_load {
+    my ($self, $variable_name) = @_;
+
+    $variable_name //= "webkit2_to_reload";
+
+    return $self->run_javascript("window.$variable_name = true;");
+}
+
+=head2 wait_for_async_page_load
+
+To be used in combination with prepare_async_page_load.
+
+=cut
+
+sub wait_for_async_page_load {
+    my ($self, $timeout, $variable_name) = @_;
+
+    $variable_name //= "webkit2_to_reload";
+
+    $self->wait_for_condition(sub {
+        not $self->run_javascript("window.$variable_name;");
+    }, $timeout);
+    $self->wait_for_page_to_load;
+}
+
 =head3 fire_event($locator, $event_type)
 
 =cut
