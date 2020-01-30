@@ -31,8 +31,16 @@ sub open {
 sub refresh {
     my ($self) = @_;
 
-    $self->view->reload;
-    $self->process_page_load;
+    my $url = $self->view->get_uri();
+
+    if ($url =~ /^http[s]?:/ or $url =~ /^file:/) {
+        $self->view->reload;
+        $self->process_page_load;
+    }
+    else {
+        $self->view->load_html(read_text($url), $url);
+    }
+
 }
 
 =head3 go_back()

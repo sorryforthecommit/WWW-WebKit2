@@ -117,7 +117,7 @@ $webkit->run_javascript('console.log("console log stdout test")');
 
 $webkit->open("$Bin/test/unload.html");
 ok($webkit->type_keys("name=test_text", 'testing refresh prompt'), 'text entered to encourage dialog prompt was successful');
-$webkit->refresh;
+$webkit->open("$Bin/test/console_error.html");
 #see: https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload$
 is($webkit->get_confirmation, "It should be Dialogue not dialog.", 'The dialogue box returned the custom message on unload');
 

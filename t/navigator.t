@@ -23,7 +23,11 @@ elsif ($@) {
 
 $webkit->open("$Bin/test/load.html");
 ok(1, 'opened');
+my $first_open = $webkit->get_html_source();
 $webkit->refresh;
+my $second_open = $webkit->get_html_source();
+is ($first_open, $second_open, 'Page refreshed correctly');
+
 $webkit->open("$Bin/test/type.html");
 $webkit->go_back;
 
