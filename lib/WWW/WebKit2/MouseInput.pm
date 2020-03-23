@@ -2,11 +2,23 @@ package WWW::WebKit2::MouseInput;
 
 use Moose::Role;
 use Carp qw(carp croak);
+use File::Basename qw(dirname);
+use File::Slurper qw(read_text);
 
 has event_send_delay => (
     is  => 'rw',
     isa => 'Int',
-    default => 5, # ms
+    default => 0, # ms
+);
+
+has 'drag_and_drop_sim' => (
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
+    default => sub {
+        # https://github.com/Photonios/JS-DragAndDrop-Simulator
+        return read_text(dirname(__FILE__ ) . '/../../../resources/javascript/dndsim.js') . '1;';
+    }
 );
 
 sub select {
@@ -295,44 +307,19 @@ Drag source element and drop it into target element.
 =cut
 
 sub native_drag_and_drop_to_object {
-    my ($self, $source_locator, $target_locator, $options) = @_;
+    my ($self, $source_locator, $target_locator) = @_;
 
-    my $steps = $options->{steps} // 5;
-    my $step_delay =  $options->{step_delay} // 150; # ms
-    $self->event_send_delay($options->{event_send_delay}) if $options->{event_send_delay};
+    my $source_element = $self->resolve_locator($source_locator)->prepare_element('source');
+    my $target_element = $self->resolve_locator($target_locator)->prepare_element('target');
+    my $js_string = qq{
+        $source_element
+        $target_element
+        DndSimulator.simulate(source, target);
+        1;
+    };
 
-    my ($x, $y) = $self->get_center_screen_position($source_locator);
-    $self->check_window_bounds($x, $y, "source '$source_locator'");
-
-    $self->pause($step_delay);
-    $self->move_mouse_abs($x, $y);
-    $self->pause($step_delay);
-    $self->press_mouse_button(1);
-    $self->pause($step_delay);
-
-    my ($target_x, $target_y) = $self->get_center_screen_position($target_locator);
-    $self->check_window_bounds($target_x, $target_y, "target '$target_locator'");
-
-    foreach (0 .. $steps - 1) {
-        my $delta_x = $target_x - $x;
-        my $delta_y = $target_y - $y;
-        my $step_x = int($delta_x / ($steps - $_));
-        my $step_y = int($delta_y / ($steps - $_));
-
-
-        $self->move_mouse_abs($x += $step_x, $y += $step_y);
-        $self->pause($step_delay);
-    }
-
-    # "move" mouse again to cause a dragover event on the target
-    # otherwise a drop may not work
-    $self->move_mouse_abs($x, $y) for 1 .. 5;
-    $self->pause($step_delay);
-
-    $self->release_mouse_button(1);
-    $self->pause($step_delay);
-    $self->move_mouse_abs($x, $y);
-    $self->pause($step_delay);
+    $self->run_javascript($self->drag_and_drop_sim);
+    $self->run_javascript($js_string);
 
     $self->process_page_load;
 }
