@@ -6,7 +6,7 @@ use Carp qw(carp croak);
 has event_send_delay => (
     is  => 'rw',
     isa => 'Int',
-    default => 5, # ms
+    default => 0, # ms
 );
 
 sub select {
