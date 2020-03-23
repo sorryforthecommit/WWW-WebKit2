@@ -1,3 +1,20 @@
+package WWW::WebKit2::MouseInput::DragAndDropSimulator;
+
+use common::sense;
+use Moose;
+
+has javascript_string => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => sub {
+        # https://github.com/Photonios/JS-DragAndDrop-Simulator
+        return join '', <WWW::WebKit2::MouseInput::DragAndDropSimulator::DATA>;
+    },
+);
+
+1;
+
+__DATA__
 /*
  * The MIT License (MIT)
  *
@@ -325,3 +342,4 @@ DndSimulator = {
         return event;
     }
 };
+1;
