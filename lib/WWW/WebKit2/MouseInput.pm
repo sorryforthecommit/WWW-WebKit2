@@ -2,8 +2,7 @@ package WWW::WebKit2::MouseInput;
 
 use Moose::Role;
 use Carp qw(carp croak);
-use File::Basename qw(dirname);
-use File::Slurper qw(read_text);
+use WWW::WebKit2::MouseInput::DragAndDropSimulator;
 
 has event_send_delay => (
     is  => 'rw',
@@ -11,14 +10,12 @@ has event_send_delay => (
     default => 0, # ms
 );
 
-has 'drag_and_drop_sim' => (
+has drag_and_drop_simulator => (
     is      => 'ro',
     isa     => 'Str',
-    lazy    => 1,
     default => sub {
-        # https://github.com/Photonios/JS-DragAndDrop-Simulator
-        return read_text(dirname(__FILE__ ) . '/../../../resources/javascript/dndsim.js') . '1;';
-    }
+        return WWW::WebKit2::MouseInput::DragAndDropSimulator->new->javascript_string;
+    },
 );
 
 sub select {
@@ -309,16 +306,17 @@ Drag source element and drop it into target element.
 sub native_drag_and_drop_to_object {
     my ($self, $source_locator, $target_locator) = @_;
 
+    my $simulator = $self->drag_and_drop_simulator;
     my $source_element = $self->resolve_locator($source_locator)->prepare_element('source');
     my $target_element = $self->resolve_locator($target_locator)->prepare_element('target');
     my $js_string = qq{
+        $simulator
         $source_element
         $target_element
         DndSimulator.simulate(source, target);
         1;
     };
 
-    $self->run_javascript($self->drag_and_drop_sim);
     $self->run_javascript($js_string);
 
     $self->process_page_load;
