@@ -40,10 +40,13 @@ with 'WWW::WebKit2::Inspector';
 with 'WWW::WebKit2::Settings';
 
 use lib 'lib';
+use DateTime;
 use Gtk3;
 use Gtk3::WebKit2;
 use Gtk3::JavaScriptCore;
 use Glib qw(TRUE FALSE);
+use File::Path qw(make_path);
+use File::Slurper qw(write_text);
 use Time::HiRes qw(time usleep);
 use X11::Xlib;
 use Carp qw(carp croak);
@@ -247,6 +250,18 @@ has events => (
     },
 );
 
+has 'logging' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default =>  0,
+);
+
+has 'log_path' => (
+    is    => 'ro',
+    isa   => 'Str',
+    default => '/tmp/webkit2_log/',
+);
+
 =head2 METHODS
 
 =head3 init
@@ -441,6 +456,36 @@ sub setup_xvfb {
     $ENV{DISPLAY} = ":$display";
 
     return;
+}
+
+sub enable_logging {
+    my ($self) = @_;
+
+    return $self->logging(1);
+}
+
+sub disable_logging {
+    my ($self) = @_;
+
+    return $self->logging(0);
+}
+
+sub write_log {
+    my ($self, $text) = @_;
+
+    return unless $self->logging;
+
+    make_path($self->log_path) unless -d $self->log_path;
+    my $file = join('/', $self->log_path, DateTime->now . '.txt');
+    write_text($file, $text);
+
+    return $file;
+}
+
+sub log_html_source {
+    my ($self) = @_;
+
+    return $self->write_log($self->get_html_source);
 }
 
 sub uninit {
