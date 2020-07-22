@@ -1,6 +1,7 @@
 package WWW::WebKit2::Inspector;
 
 use Carp qw(carp croak);
+use Encode qw(decode_utf8);
 use Glib qw(TRUE FALSE);
 use Moose::Role;
 use JSON qw(decode_json encode_json);
@@ -101,9 +102,23 @@ sub get_body_text {
 sub get_html_source {
     my ($self) = @_;
 
-    my $html_source = $self->run_javascript("document.getElementsByTagName('html')[0].innerHTML");
+    my $html_source;
+    my $resource = $self->view->get_main_resource();
+    my $done = 0;
 
-    return $html_source;
+    $resource->get_data(undef, sub {
+        my ($resource, $result, $user_data) = @_;
+
+        $html_source = $resource->get_data_finish($result);
+        $done = 1;
+    }, undef);
+
+    Gtk3::main_iteration while Gtk3::events_pending or not $done;
+
+    # get_data_finish returns a byte-array, turn it into a human readable string
+    my $html_string = decode_utf8(join('', map chr, @$html_source));
+
+    return $html_string;
 }
 
 =head3 get_text
