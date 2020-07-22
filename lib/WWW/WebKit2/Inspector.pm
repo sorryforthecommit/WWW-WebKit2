@@ -106,6 +106,8 @@ sub get_html_source {
     my $resource = $self->view->get_main_resource();
     my $done = 0;
 
+    return '' unless $resource;
+
     $resource->get_data(undef, sub {
         my ($resource, $result, $user_data) = @_;
 
