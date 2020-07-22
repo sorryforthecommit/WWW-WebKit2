@@ -488,7 +488,6 @@ sub log_html_source {
     return $self->write_log($self->get_html_source);
 }
 
-
 sub uninit {
     my ($self) = @_;
 

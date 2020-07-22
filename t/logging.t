@@ -37,7 +37,7 @@ ok((not $file), 'no logging, no file written');
 
 # try initializing with logging => 1
 $dir = File::Temp->newdir();
-my $webkit = WWW::WebKit2->new(
+$webkit = WWW::WebKit2->new(
     xvfb     => 0,
     log_path => "$dir/logs",
     logging  => 1,
@@ -46,5 +46,9 @@ my $webkit = WWW::WebKit2->new(
 $file = $webkit->write_log('another test');
 ok(-d "$dir/logs", 'log folder creted');
 is(read_text($file), 'another test', 'log file written');
+
+$webkit->open("$Bin/test/load.html");
+$file = $webkit->log_html_source;
+is(read_text($file), read_text("$Bin/test/load.html"), 'logged html source');
 
 done_testing;
