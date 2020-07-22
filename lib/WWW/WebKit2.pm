@@ -36,6 +36,7 @@ with 'WWW::WebKit2::MouseInput';
 with 'WWW::WebKit2::KeyboardInput';
 with 'WWW::WebKit2::Events';
 with 'WWW::WebKit2::Navigator';
+with 'WWW::WebKit2::Proxy';
 with 'WWW::WebKit2::Inspector';
 with 'WWW::WebKit2::Settings';
 
@@ -349,6 +350,8 @@ sub init_webkit {
     $self->process_events;
 
     $self->enable_developer_extras;
+
+    $self->set_proxy($self->proxy_uri, $self->proxy_ignored_hosts) if $self->proxy_uri;
 
     return $self;
 }
