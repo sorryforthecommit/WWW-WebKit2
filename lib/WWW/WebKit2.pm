@@ -383,12 +383,14 @@ sub pending {
 sub process_events {
     my ($self) = @_;
 
+    Gtk3::main_iteration_do(0);
     Gtk3::main_iteration while Gtk3::events_pending;
 }
 
 sub process_page_load {
     my ($self) = @_;
 
+    Gtk3::main_iteration_do(0);
     Gtk3::main_iteration while Gtk3::events_pending or $self->is_loading;
 }
 
