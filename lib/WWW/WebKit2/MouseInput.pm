@@ -325,4 +325,102 @@ sub native_drag_and_drop_to_object {
     $self->process_page_load;
 }
 
+=head3 mouse_input_drag_and_drop_to_position
+
+
+=cut
+
+
+sub mouse_input_drag_and_drop_to_position {
+    my ($self, $source_locator, $target_x, $target_y, $options ) = @_;
+
+    $self->check_window_bounds($target_x, $target_y, "target");
+
+    my $steps = $options->{steps} // 5;
+    my $step_delay = $options->{step_delay} // 150; # ms
+    $self->event_send_delay($options->{even_send_delay}) if $options->{even_send_delay};
+
+    my ($source_x, $source_y) = $self->get_center_screen_position($source_locator);
+    $self->check_window_bounds($source_x, $source_y, "source '$source_locator'");
+
+    my ($delta_x, $delta_y) = ($target_x - $source_x, $target_y - $source_y);
+    my ($step_x, $step_y) = ( int($delta_x / $steps), int($delta_y / $steps) );
+
+    my ($x, $y) = ($source_x, $source_y);
+
+    $self->move_mouse_abs($source_x, $source_y);
+    $self->pause($step_delay);
+    $self->press_mouse_button(1);
+    $self->pause($step_delay);
+
+    foreach (1..$steps) {
+        $self->move_mouse_abs($x += $step_x, $y += $step_y);
+        $self->pause($step_delay);
+    }
+
+    $self->move_mouse_abs($target_x, $target_y);
+    $self->pause($step_delay);
+    $self->release_mouse_button(1);
+    $self->pause($step_delay);
+    $self->move_mouse_abs($target_x, $target_y);
+    $self->pause($step_delay);
+
+    $self->process_page_load;
+
+}
+
+=head3 mouse_input_drag_and_drop_to_object
+
+
+=cut
+
+
+sub mouse_input_drag_and_drop_to_object {
+    my ($self, $source_locator, $target_locator, $options) =@_;
+
+    my $source = $self->resolve_locator($source_locator)->get_length;
+    my $target = $self->resolve_locator($target_locator)->get_length;
+
+    my $steps = $options->{steps} // 5;
+    my $step_delay = $options->{step_delay} // 150; #ms
+    $self->event_send_delay($options->{event_send_delay}) if $options->{event_send_delay};
+
+    my ($x, $y) = $self->get_center_screen_position($source_locator);
+    $self->check_window_bounds($x, $y, "source '$source_locator'");
+
+    $self->pause($step_delay);
+    $self->move_mouse_abs($x, $y);
+    $self->pause($step_delay);
+    $self->press_mouse_button(1);
+    $self->pause($step_delay);
+
+    my ($target_x, $target_y) = $self->get_center_screen_position($target_locator);
+    $self->check_window_bounds($target_x, $target_y, "target '$target_locator'");
+
+    foreach (0 .. $steps -1) {
+        my $delta_x = $target_x - $x;
+        my $delta_y = $target_y - $y;
+        my $step_x = int($delta_x / ($steps - $_));
+        my $step_y = int($delta_y / ($steps - $_));
+
+        $self->move_mouse_abs($x += $step_x, $y += $step_y);
+        $self->pause($step_delay);
+    }
+
+    # "move" mouse again to cause a dragover event on the target
+    # otherwise a drop may not work
+
+    $self->move_mouse_abs($x, $y);
+    $self->pause($step_delay);
+
+    $self->release_mouse_button(1);
+    $self->pause($step_delay);
+    $self->move_mouse_abs($x, $y);
+    $self->pause($step_delay);
+    $self->pause(300);
+    $self->is_loading;
+
+    return $self;
+}
+
 1;
