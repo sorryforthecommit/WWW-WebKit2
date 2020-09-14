@@ -336,7 +336,7 @@ sub fire_event {
         window.event_fired = "initialized";
         element.addEventListener("' . $event_type . '", function(e) {
            window.event_fired = "fired";
-        });
+        }, { once: true });
         var event = new Event("' . $event_type . '", { "bubbles": true, "cancelable": true });
         element.dispatchEvent(event);
     ';
