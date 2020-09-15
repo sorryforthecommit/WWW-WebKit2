@@ -87,7 +87,7 @@ sub uncheck {
 }
 
 sub click {
-    my ($self, $locator) = @_;
+    my ($self, $locator, $wait) = @_;
 
     my $element = $self->resolve_locator($locator);
 
@@ -99,23 +99,25 @@ sub click {
     if ($tag eq 'input' and ($type eq 'checkbox' or $type eq 'radio')) {
         $element->property_search('click()');
     }
-    elsif (($tag eq 'input' and ($type eq 'submit' or $type eq 'image'))
-        or $tag eq 'submit'
-        or ($tag eq 'button' and $type eq 'submit')) {
-
-        $element->property_search('click()');
-        $self->wait_for_condition(sub {
-            $self->load_status eq 'started'
-        }, 100);
-    }
     else {
         $element->fire_event('click');
     }
 
+    if ($wait) {
+        $self->wait_for_condition(sub {
+            $self->is_loading;
+        });
+    }
 
     $self->process_page_load;
 
     return 1;
+}
+
+sub click_and_wait {
+    my ($self, $locator) = @_;
+
+    return $self->click($locator, 1);
 }
 
 sub left_click {
