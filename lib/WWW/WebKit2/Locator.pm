@@ -336,7 +336,7 @@ sub fire_event {
         window.event_fired = "initialized";
         element.addEventListener("' . $event_type . '", function(e) {
            window.event_fired = "fired";
-        });
+        }, { once: true });
         var event = new Event("' . $event_type . '", { "bubbles": true, "cancelable": true });
         element.dispatchEvent(event);
     ';
@@ -351,7 +351,7 @@ sub fire_event {
 
     # regardless of what javascript will be executed because of fire_event,
     # at least make sure to wait until we have a page to work with.
-    Gtk3::main_iteration
+    Gtk3::main_iteration_do(0)
         while (Gtk3::events_pending);
 
     return $result;
