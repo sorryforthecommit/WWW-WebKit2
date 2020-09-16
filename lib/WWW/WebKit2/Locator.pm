@@ -1,6 +1,5 @@
 package WWW::WebKit2::Locator;
 
-use common::sense;
 use Carp qw(croak);
 use JSON qw(decode_json encode_json);
 use Moose;
