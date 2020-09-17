@@ -106,7 +106,7 @@ sub click {
     if ($wait) {
         $self->wait_for_condition(sub {
             $self->is_loading;
-        });
+        }, $wait);
     }
 
     $self->process_page_load;
@@ -115,9 +115,10 @@ sub click {
 }
 
 sub click_and_wait {
-    my ($self, $locator) = @_;
+    my ($self, $locator, $timeout) = @_;
 
-    return $self->click($locator, 1);
+    $timeout //= $self->default_timeout;
+    return $self->click($locator, $timeout);
 }
 
 sub left_click {
