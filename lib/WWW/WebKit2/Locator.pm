@@ -361,7 +361,7 @@ sub fire_event {
 =cut
 
 sub is_visible {
-    my ($self, $attribute) = @_;
+    my ($self) = @_;
 
     my $search = $self->prepare_element;
 

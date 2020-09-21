@@ -69,7 +69,6 @@ $webkit->wait_for_alert("blurred", 100);
 my $httpd = Test::Fake::HTTPD->new;
 
 $httpd->run(sub {
-    my $req = shift;
     return [ 200, [ 'Content-Type', 'text/html' ], [ read_text("$Bin/test/events.html") ] ];
 });
 

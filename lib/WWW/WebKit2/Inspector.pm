@@ -15,7 +15,7 @@ sub run_javascript {
     my $js_result = '';
 
     $self->view->run_javascript("(function () {$javascript_string})()", undef, sub {
-        my ($object, $result, $user_data) = @_;
+        my ($object, $result) = @_;
         $done = 1;
         $js_result = $self->get_javascript_result($result, $raw, $javascript_string);
     }, undef);
@@ -63,7 +63,7 @@ sub resolve_locator {
 
     $locator =~ s/'/\\'/g;
 
-    if (my ($css) = $locator =~ /^css=(.*)/) {
+    if ($locator =~ /^css=(.*)/) {
         return WWW::WebKit2::LocatorCSS->new({
             locator_string => $locator,
             inspector      => $self,
@@ -113,7 +113,7 @@ sub get_html_source {
     return '' unless $resource;
 
     $resource->get_data(undef, sub {
-        my ($resource, $result, $user_data) = @_;
+        my ($resource, $result) = @_;
 
         $html_source = $resource->get_data_finish($result);
         $done = 1;
