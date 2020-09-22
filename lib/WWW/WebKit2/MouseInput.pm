@@ -375,7 +375,6 @@ sub mouse_input_drag_and_drop_to_object {
     $self->move_mouse_abs($x, $y);
     $self->pause($step_delay);
     $self->pause(300);
-    $self->is_loading;
 
     return $self;
 }
