@@ -228,7 +228,7 @@ sub fire_mouse_event {
             $shift_down
         );
 
-        element.dispatchEvent(clickEvent);";
+        return element.dispatchEvent(clickEvent);";
 
     $self->run_javascript($mouse_up_script);
 
@@ -317,7 +317,7 @@ sub native_drag_and_drop_to_object {
         $source_element
         $target_element
         DndSimulator.simulate(source, target);
-        1;
+        return 1;
     };
 
     $self->run_javascript($js_string);
