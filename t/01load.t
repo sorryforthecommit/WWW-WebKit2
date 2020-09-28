@@ -61,8 +61,8 @@ ok($sel->is_ordered('id=first', 'id=second'), 'is_ordered is correct for ordered
 ok((not $sel->is_ordered('id=second', 'id=first')), 'is_ordered detects wrong order correctly');
 
 $sel->open("$Bin/test/eval.html");
-is($sel->eval_js('"foo"'), 'foo', 'string evaluated');
-is($sel->eval_js('document.getElementById("foo").firstChild.data'), 'bar', 'js evaluated');
+is($sel->eval_js('return "foo"'), 'foo', 'string evaluated');
+is($sel->eval_js('return document.getElementById("foo").firstChild.data'), 'bar', 'js evaluated');
 
 $sel->refresh;
 $sel->open("$Bin/test/type.html");
