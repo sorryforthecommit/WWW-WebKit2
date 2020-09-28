@@ -12,6 +12,9 @@ use URI;
 
 use_ok 'WWW::WebKit2';
 
+#Running tests as root will sometimes spawn an X11 that cannot be closed automatically and leave the test hanging
+plan skip_all => 'Tests run as root may hang due to X11 server not closing.' unless $>;
+
 my $dir = File::Temp->newdir();
 
 # logging should be off by default
