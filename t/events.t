@@ -46,7 +46,7 @@ ok(
 $webkit->eval_js("window.scrollBy(0, 100);");
 ok(
     $webkit->wait_for_condition(sub {
-        $webkit->eval_js("document.documentElement.scrollTop") == 100
+        $webkit->eval_js("return document.documentElement.scrollTop") == 100
     }, 1000)
 );
 
@@ -84,9 +84,9 @@ is($webkit->resolve_locator("css=#ajax_result")->get_inner_html, 'Hello World', 
 $webkit->prepare_async_page_load;
 $webkit->click('css=button#start_ajax_with_reload');
 $webkit->wait_for_async_page_load;
-ok((not $webkit->run_javascript('window.ajax_url')), 'page has been reloaded');
+ok((not $webkit->run_javascript('return window.ajax_url')), 'page has been reloaded');
 
-is($webkit->run_javascript('document.cookie'), 'foo=bar', 'cookie set');
+is($webkit->run_javascript('return document.cookie'), 'foo=bar', 'cookie set');
 $webkit->clear_cookies;
 is($webkit->run_javascript('document.cookie'), '', 'cookies cleared');
 
