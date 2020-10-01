@@ -26,3 +26,6 @@ Change to how page loading is checked in fire events.
 0.123 Tue Sep 29 18:01:00 CET 2020
 - Use Webkit2 decide-policy signal to make sure we do not navigate away from pages too quickly
 - Injected JS for navigation is through anonymous functions to reduce the amount of global variables
+
+0.124 Thu Oct 1 08:16:00 CET 2020
+- error correction for tests when run as root. Use ok in wrong position
