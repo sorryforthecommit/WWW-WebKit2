@@ -53,7 +53,7 @@ use X11::Xlib;
 use Carp qw(carp croak);
 use XSLoader;
 use English '-no_match_vars';
-use POSIX qw<F_SETFD F_GETFD FD_CLOEXEC>;
+use POSIX qw(F_SETFD F_GETFD FD_CLOEXEC);
 
 our $VERSION = '0.125';
 
