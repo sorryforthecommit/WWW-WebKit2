@@ -55,7 +55,7 @@ use XSLoader;
 use English '-no_match_vars';
 use POSIX qw<F_SETFD F_GETFD FD_CLOEXEC>;
 
-our $VERSION = '0.124';
+our $VERSION = '0.125';
 
 use constant DOM_TYPE_ELEMENT => 1;
 use constant ORDERED_NODE_SNAPSHOT_TYPE => 7;
@@ -268,6 +268,11 @@ has 'active_navigation_action' => (
     default => 0,
 );
 
+has 'concurrent_active_navigation_warning' => (
+    is      => 'ro',
+    default => 0,
+);
+
 =head2 METHODS
 
 =head3 init
@@ -352,13 +357,20 @@ sub init_webkit {
         my ($view, $decision, $type) = @_;
         if ($type eq 'navigation-action') {
             my $action = $decision->get_navigation_action;
-            die "Already running a navigation action to " .
-                $self->active_navigation_action
-                . " when requested "
-                . $action->get_navigation_type . ' ' . $action->get_request->get_uri
-                if $self->active_navigation_action and not $action->is_redirect;
+
+            if ($self->concurrent_active_navigation_warning
+                and $self->active_navigation_action and not $action->is_redirect) {
+
+                warn "Already running a navigation action to " .
+                    $self->active_navigation_action
+                    . " when requested "
+                    . $action->get_navigation_type . ' ' . $action->get_request->get_uri;
+            }
+
             $self->active_navigation_action($action->get_request->get_uri)
-                if ($self->view->get_uri =~ s/#.*//r) ne ($action->get_request->get_uri =~ s/#.*//r);
+                if ($self->view->get_uri =~ s/#.*//r) ne ($action->get_request->get_uri =~ s/#.*//r)
+                    and not $action->is_redirect;
+
         }
         $decision->use;
         return 0;
