@@ -355,23 +355,29 @@ sub init_webkit {
 
     $self->view->signal_connect('decide-policy' => sub {
         my ($view, $decision, $type) = @_;
+
         if ($type eq 'navigation-action') {
+
             my $action = $decision->get_navigation_action;
+            my $action_uri = $action->get_request->get_uri;
 
-            if ($self->concurrent_active_navigation_warning
-                and $self->active_navigation_action and not $action->is_redirect) {
+            unless ($action_uri eq 'about:blank') {
 
-                warn "Already running a navigation action to " .
-                    $self->active_navigation_action
-                    . " when requested "
-                    . $action->get_navigation_type . ' ' . $action->get_request->get_uri;
+                if ($self->concurrent_active_navigation_warning
+                    and $self->active_navigation_action and not $action->is_redirect) {
+
+                    warn "Already running a navigation action to " .
+                        $self->active_navigation_action
+                        . " when requested "
+                        . $action->get_navigation_type . ' ' . $action->get_request->get_uri;
+                }
+
+                $self->active_navigation_action($action->get_request->get_uri)
+                    if ($self->view->get_uri =~ s/#.*//r) ne ($action->get_request->get_uri =~ s/#.*//r)
+                        and not $action->is_redirect;
             }
-
-            $self->active_navigation_action($action->get_request->get_uri)
-                if ($self->view->get_uri =~ s/#.*//r) ne ($action->get_request->get_uri =~ s/#.*//r)
-                    and not $action->is_redirect;
-
         }
+
         $decision->use;
         return 0;
     });
