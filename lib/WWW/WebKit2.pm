@@ -361,8 +361,7 @@ sub init_webkit {
             my $action = $decision->get_navigation_action;
             my $action_uri = $action->get_request->get_uri;
 
-            unless ($action_uri eq 'about:blank') {
-
+            unless ($action_uri =~ m/\A about:/x) {
                 if ($self->concurrent_active_navigation_warning
                     and $self->active_navigation_action and not $action->is_redirect) {
 
