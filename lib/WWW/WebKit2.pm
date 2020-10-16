@@ -22,6 +22,8 @@ WWW::WebKit2 - Perl extension for controlling an embedding WebKit2 engine
 WWW::WebKit2 is a drop-in replacement for WWW::Selenium using Gtk3::WebKit2
 as browser instead of relying on an external Java server and an installed browser.
 
+
+There are a range of browser settings available. Please check WWW::WebKit2::Settings for more information.
 =head2 EXPORT
 
 None by default.
@@ -411,7 +413,6 @@ sub process_confirmation_prompt {
     );
 
 }
-
 
 sub pending {
     my ($self) = @_;
