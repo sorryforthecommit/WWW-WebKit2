@@ -22,6 +22,8 @@ WWW::WebKit2 - Perl extension for controlling an embedding WebKit2 engine
 WWW::WebKit2 is a drop-in replacement for WWW::Selenium using Gtk3::WebKit2
 as browser instead of relying on an external Java server and an installed browser.
 
+
+There are a range of browser settings available. Please check WWW::WebKit2::Settings for more information.
 =head2 EXPORT
 
 None by default.
@@ -412,7 +414,6 @@ sub process_confirmation_prompt {
 
 }
 
-
 sub pending {
     my ($self) = @_;
 
@@ -424,6 +425,13 @@ sub process_events {
 
     Gtk3::main_iteration_do(0) while Gtk3::events_pending;
 }
+
+=head2 process_page_load
+
+No parameters needed.
+Method attempts to ensure the page has finished loading. This handling is primailary based on checking if GTK3 has any events pending
+
+=cut
 
 sub process_page_load {
     my ($self) = @_;
@@ -557,11 +565,11 @@ sub DESTROY {
 =head1 SEE ALSO
 
 See L<WWW::Selenium> for API documentation.
-See L<Test::WWW::WebKit> for a replacement for L<Test::WWW::Selenium>.
-See L<Test::WWW::WebKit::Catalyst> for a replacement for L<Test::WWW::Selenium::Catalyst>.
+See L<Test::WWW::WebKit2> for a replacement for L<Test::WWW::Selenium>.
+See L<Test::WWW::WebKit2::Catalyst> for a replacement for L<Test::WWW::Selenium::Catalyst>.
 
 The current development version can be found in the git repository at:
-https://github.com/jscarty/WWW-WebKit2
+https://github.com/sorryforthecommit/WWW-WebKit2
 
 =head1 AUTHOR
 

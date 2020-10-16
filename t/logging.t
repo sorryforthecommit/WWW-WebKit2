@@ -47,7 +47,7 @@ $webkit = WWW::WebKit2->new(
 );
 
 $file = $webkit->write_log('another test');
-ok(-d "$dir/logs", 'log folder creted');
+ok(-d "$dir/logs", 'log folder created');
 is(read_text($file), 'another test', 'log file written');
 
 $webkit->open("$Bin/test/load.html");
