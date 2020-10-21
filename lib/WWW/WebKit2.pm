@@ -375,6 +375,9 @@ sub init_webkit {
                     if ($self->view->get_uri =~ s/#.*//r) ne ($action->get_request->get_uri =~ s/#.*//r)
                         and not $action->is_redirect;
             }
+            else {
+                $self->active_navigation_action('');
+            }
         }
 
         $decision->use;
@@ -457,6 +460,10 @@ sub handle_resource_request {
     $resource->signal_connect('failed' => sub {
         # If someone decides not to wait_for_pending_requests, this signal is received
         # during global destruction with $self being undefined.
+        $self->active_navigation_action('') if $uri eq $self->active_navigation_action;
+        delete $self->pending_requests->{"$request"} if defined $self;
+    });
+    $resource->signal_connect('failed-with-tls-errors' => sub {
         $self->active_navigation_action('') if $uri eq $self->active_navigation_action;
         delete $self->pending_requests->{"$request"} if defined $self;
     });

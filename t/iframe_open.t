@@ -18,4 +18,5 @@ $wkit->init;
 $wkit->open("$Bin/test/iframe.html");
 ok(1, 'opened');
 
+$wkit->click('id=iframeDisplay');
 done_testing;

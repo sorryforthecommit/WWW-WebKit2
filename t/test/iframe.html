@@ -18,6 +18,16 @@
     <iframe src="about:blank"></iframe>
     <iframe src="about:help"></iframe>
     <iframe src="about:config"></iframe>
+    </br>
+    <button id="iframe_open" onclick="displayIframe()" >click me</button>
+    </br>
+    <div id="iframeDisplay"></div>
 
+    <script>
+        function displayIframe() {
+            document.getElementById("iframeDisplay").innerHTML = "<iframe id=\"test_frame\" src=\"about:blank\"></iframe>";
+
+        }
+        </script>
     </body>
 </html>
