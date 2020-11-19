@@ -45,6 +45,7 @@ use DateTime;
 use Gtk3;
 use Gtk3::WebKit2;
 use Gtk3::JavaScriptCore;
+use Gtk3::Soup;
 use Glib qw(TRUE FALSE);
 use File::Path qw(make_path);
 use File::Slurper qw(write_text);
