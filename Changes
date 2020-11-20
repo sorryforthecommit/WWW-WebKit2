@@ -44,3 +44,4 @@ Change to how page loading is checked in fire events.
 
 0.129 Thu Nov 19 14:00:00 CET 2020
 - Remove uneeded lib path in test file
+- Improved cookie management using Webkit2s Website data manage and cookie manager
