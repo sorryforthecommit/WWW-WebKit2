@@ -45,3 +45,8 @@ Change to how page loading is checked in fire events.
 0.129 Thu Nov 19 14:00:00 CET 2020
 - Remove uneeded lib path in test file
 - Improved cookie management using Webkit2s Website data manage and cookie manager
+
+0.13 Tue May 11 16:00:00 CET 2020
+- Sometimes errors captured in get_javascript_result were lost due to the use of a global variable.
+- The value in the global variable is now stored in a seperate variable and output during its normal error handling.
+- Updated name of test modules to be the correct ones rather than the Webkit1 names.
