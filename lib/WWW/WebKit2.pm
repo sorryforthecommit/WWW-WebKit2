@@ -49,7 +49,6 @@ use Gtk3::Soup;
 use Glib qw(TRUE FALSE);
 use File::Path qw(make_path);
 use File::Slurper qw(write_text);
-use Time::HiRes qw(time usleep);
 use X11::Xlib;
 use Carp qw(carp croak);
 use XSLoader;
