@@ -499,6 +499,7 @@ sub setup_xvfb {
     my $display = <$read>;
     chomp $display;
 
+    $ENV{WAYLAND_DISPLAY} = '';
     $ENV{DISPLAY} = ":$display";
 
     return;
