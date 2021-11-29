@@ -49,9 +49,12 @@ sub wait_for_condition {
     my $result;
     my $timed_out = 0;
     my $source = Glib::Timeout->add($timeout, sub { $timed_out = 1; return 0; });
-    until ($result = $condition->() or $timed_out) {
-        Gtk3::main_iteration;
+
+    until ($timed_out or $result = $condition->()) {
+        Gtk3::main_iteration();
+        Gtk3::main_iteration_do(0) while Gtk3::events_pending;
     }
+
     Glib::Source->remove($source) unless $timed_out;
 
     $self->process_events;
