@@ -500,6 +500,7 @@ sub setup_xvfb {
 
     $ENV{WAYLAND_DISPLAY} = '';
     $ENV{DISPLAY} = ":$display";
+    $ENV{DBUS_SESSION_BUS_ADDRESS} = 'unix:abstract=/dev/null';
 
     return;
 }
